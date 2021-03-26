@@ -1,0 +1,2 @@
+class InterestFamily < ApplicationRecord
+end

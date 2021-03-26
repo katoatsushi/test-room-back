@@ -1,0 +1,2 @@
+class MyCondition < ApplicationRecord
+end
