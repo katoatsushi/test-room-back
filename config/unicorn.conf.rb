@@ -30,3 +30,10 @@
   after_fork do |server, worker|
     defined?(ActiveRecord::Base) and ActiveRecord::Base.establish_connection
   end
+
+# aws:
+#   access_key_id: AKIAUH2AGDLQ2WSHF5MC
+#   secret_access_key: 543p1mt3GaBtciEmISbZ2MVhCs2XqPSiGX2/Zf23
+#   s3:
+#     region: ap-northeast-1
+#     bucket: activestorage-sample-bucket
