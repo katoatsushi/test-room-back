@@ -4,7 +4,6 @@ class CreateTrainerShifts < ActiveRecord::Migration[6.0]
       t.datetime :start
       t.datetime :finish
       t.references :trainer
-      # t.references :store
       t.integer :store_id
       t.timestamps
     end

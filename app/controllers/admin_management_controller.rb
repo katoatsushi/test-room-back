@@ -17,9 +17,12 @@ class AdminManagementController < ApplicationController
         }
     end
 
-    def get_trainer_shifts
+    def get_trainer_shifts    
+        company_id = params["company_id"].to_i
+        stores = Store.where(company_id: company_id)
         year = params["year"].to_i
         month = params["month"].to_i
+        month = month - 1
         end_date = Date.new(year, month, -1).day
         date_array= []
         date_infos = []
@@ -30,25 +33,59 @@ class AdminManagementController < ApplicationController
         end
 
         data = []
-        Trainer.where(company_id: 1).each do |trainer|
+        submit_data = []
+        Trainer.where(company_id: company_id).each do |trainer|
             shifts_data = []
             date_array.each do |date|
                 s = DateTime.new(year, month, date, 0, 0,0, 0.375)
                 f = DateTime.new(year, month, date, -1, -1,0, 0.375)
                 shifts = trainer.trainer_shifts.where("? <= start AND finish <= ?", s, f)
-                # shifts_data << [date, %w(日 月 火 水 木 金 土)[s.wday], shifts]
-                shifts_data << {trainer: trainer, day: date, day_ja:  %w(日 月 火 水 木 金 土)[s.wday], shifts: shifts}
+                if  shifts.length != 0
+                    shifts = shifts[0]
+                    shifts = shifts.attributes
+
+                    if shifts["store_id"]
+                        shifts["store"] = Store.find(shifts["store_id"])
+                    end
+
+                    submit_data << {trainer_id: trainer.id, day: date, day_ja:  %w(日 月 火 水 木 金 土)[s.wday], shifts: shifts}
+                else
+                    shifts = nil
+                end
+                shifts_data << {trainer: trainer, trainer_id: trainer.id, month: month, year: year, day: date, day_ja:  %w(日 月 火 水 木 金 土)[s.wday], shifts: shifts}
             end
             data << {trainer: trainer, data: shifts_data}
-            # data << [trainer, shifts_data]
         end
         render json: {
             data: data,
             date_infos: date_infos,
+            submit_data: submit_data,
+            stores: stores,
             status: 200
-        }    
+        }
     end
 
+    def update_trainer_shift
+        datas = params["data"]
+        datas.each do |d|
+            if d["shifts"]["id"].nil?
+                # 新規の場合
+                new_shift = TrainerShift.new
+                new_shift.start = d["shifts"]["start"].to_datetime
+                new_shift.finish = d["shifts"]["finish"].to_datetime
+                new_shift.store_id = d["shifts"]["store"]["id"]
+                new_shift.trainer_id = d["trainer_id"]
+                new_shift.save
+            else
+                # 変更の場合
+                shift = TrainerShift.find(d["shifts"]["id"])
+                shift.start = d["shifts"]["start"].to_datetime
+                shift.finish = d["shifts"]["finish"].to_datetime
+                shift.store_id = d["store_id"]
+                shift.save
+            end
+        end
+    end
 
     def check_evaluation
         company_id = Customer.find(params["customer_id"]).company_id     

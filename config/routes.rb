@@ -26,7 +26,10 @@ Rails.application.routes.draw do
 
   get '/get/all_customers',to: 'admin_management#all_customer', as: 'all_customer'
   get '/serch/customers',to: 'admin_management#search_customer', as: 'search_customer'
+  #  トレーナーのシフトを送る
   get '/get_trainer_shifts',to: 'admin_management#get_trainer_shifts', as: 'get_trainer_shifts'
+  # トレーナーのシフトを更新する
+  put '/update_trainer_shift',to: 'admin_management#update_trainer_shift', as: 'update_trainer_shift'
 
   get '/check_evaluation/:customer_id', to: 'admin_management#check_evaluation', as: 'check_evaluation'
   # トレーナーのプロフィール画像を変更
