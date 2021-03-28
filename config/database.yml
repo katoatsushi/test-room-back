@@ -34,9 +34,10 @@ test:
 #   database: room_api_production
 #   username: room_api
 #   password: <%= ENV['ROOM_API_DATABASE_PASSWORD'] %>
+
 production:
     <<: *default
-    database: <%= Rails.application.credentials.db[:database] %>
-    username: <%= Rails.application.credentials.db[:username] %>
-    password: <%= Rails.application.credentials.db[:password] %>
-    socket: <%= Rails.application.credentials.db[:socket] %>
+    database: room
+    username: root
+    password: gonza1026
+    socket: /var/lib/mysql/mysql.sock
