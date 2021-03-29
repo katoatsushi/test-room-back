@@ -41,6 +41,23 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
+
+  mail = "room.training.info@gmail.com"
+  pass = "cebyuvvdlwsgmvfh"
+
+  config.action_mailer.default_options = { from: mail }
+  # config.action_mailer.default_url_options = { host: 'localhost:3001' }
+  config.action_mailer.default_url_options = { host: 'main.d3udfnrfdm3q44.amplifyapp.com/' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.gmail.com',
+    port: 587,
+    domain: 'gmail.com',
+    user_name: mail,
+    password: pass,
+    authentication: 'plain',
+    enable_starttls_auto: true
+  }
   config.log_level = :debug
 
   # Prepend all log lines with the following tags.
