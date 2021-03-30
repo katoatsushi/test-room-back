@@ -2,12 +2,10 @@ Rails.application.routes.draw do
   root 'home#index'
   resources :customer_menus
   resources :black_schedules
-  # resources :customer_infos
   resources :trainer_infos
   resources :evaluations
   resources :customer_record_session_menus
   resources :customer_records
-  # resources :customer_statuses
   # トレーナーのシフト作成
   post '/trainer/shift/create/year/:year/month/:month', to: 'trainer_shifts#create', as: 'trainer_shifts_create'
 
