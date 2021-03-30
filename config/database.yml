@@ -29,15 +29,15 @@ test:
   database: room_api_test
 
 
-# production:
-#   <<: *default
-#   database: room_api_production
-#   username: room_api
-#   password: <%= ENV['ROOM_API_DATABASE_PASSWORD'] %>
-
 production:
-    <<: *default
-    database: room
-    username: root
-    password: gonza1026
-    socket: /var/lib/mysql/mysql.sock
+  <<: *default
+  database: room_api_production
+  username: room_api
+  password: <%= ENV['ROOM_API_DATABASE_PASSWORD'] %>
+
+# production:
+#     <<: *default
+#     database: room
+#     username: root
+#     password: gonza1026
+#     socket: /var/lib/mysql/mysql.sock
