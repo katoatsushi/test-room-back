@@ -33,6 +33,7 @@ production:
   <<: *default
   database: room_api_production
   username: room_api
+  encoding: utf8
   password: <%= ENV['ROOM_API_DATABASE_PASSWORD'] %>
 
 # production:
