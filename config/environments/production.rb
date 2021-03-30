@@ -60,6 +60,11 @@ Rails.application.configure do
   }
   config.log_level = :debug
 
+  # herokuデプロイ用
+  config.assets.compile = true
+  config.assets.initialize_on_precompile=false
+  # ここまで
+
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
 
