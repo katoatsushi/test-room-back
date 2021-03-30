@@ -27,7 +27,7 @@ module RoomApi
     config.active_record.default_timezone = :local
     config.i18n.default_locale = :ja
     # Zeitwerk::NameError 対策
-    config.autoloader = :classic
+    # config.autoloader = :classic
     # Permit cross origin
     config.middleware.insert_before 0, Rack::Cors do
       allow do
