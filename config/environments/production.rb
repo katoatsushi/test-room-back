@@ -47,7 +47,7 @@ Rails.application.configure do
 
   config.action_mailer.default_options = { from: mail }
   # config.action_mailer.default_url_options = { host: 'localhost:3001' }
-  config.action_mailer.default_url_options = { host: 'main.d3udfnrfdm3q44.amplifyapp.com/' }
+  config.action_mailer.default_url_options = { host: 'main.d3udfnrfdm3q44.amplifyapp.com' }
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address: 'smtp.gmail.com',
