@@ -1,32 +1,78 @@
 MasterAdmin.create(email: "admin@gmail.com", password: "111111")
 MasterAdmin.create(email: "masteradmin@gmail.com", password: "111111")
+c_a = Company.create(name: "room")
+c_b = Company.create(name: "rise-up")
 
-Company.create(name: "room")
-Company.create(name: "rise-up")
+# require './db/seeds/fitness.rb'
+obj = Fitness.create(name: "トレーニング", company_id: 1)
+a = FitnessSecond.create(name: "胸", fitness_id: obj.id)
+menu_a = ["ベンチプレス","インクラインベンチプレス","デクラインベンチプレス",
+"ダンベルフライ","ダンベルプレス","インクラインダンベルプレス","インクラインダンベルフライ",
+"ダンベルプルオーバー","プッシュアップ","ディップス"]
+menu_a.each do |m|
+    FitnessThird.create(name: m, fitness_second_id: a.id, set: true, weight: true, fitness_second_name: a.name)
+end
+b = FitnessSecond.create(name: "背中", fitness_id: obj.id)
+menu_b = ['ラットプルダウン','シーテッドローイング','チンニング',
+    'ダンベルプルオーバー','ワンハンドローイング','ベントオーバーローイング',
+    'デッドリフト','バックエクステンション','グッドモーニング'
+]
+menu_b.each do |m|
+    FitnessThird.create(name: m, fitness_second_id: b.id, set: true, weight: true, fitness_second_name: b.name)
+end
+menu_c = ['ミリタリープレス','バックプレス','フロントプレス','バーベルシュラッグ',
+    'アップライトローイング','サイドレイズ','フロントレイズ','リアレイズ','アーノルドプレス','ショルダープレス'
+]
+c = FitnessSecond.create(name: "肩", fitness_id: obj.id)
+menu_c.each do |m|
+    FitnessThird.create(name: m, fitness_second_id: c.id, set: true, weight: true, fitness_second_name: c.name)
+end
+d = FitnessSecond.create(name: "三頭", fitness_id: obj.id)
+menu_d = ['フレンチプレス','トライセプスエクステンション','ナローベンチプレス','キックバック','プレスダウン','ナロープッシュアップ','リバースプッシュアップ']
+menu_d.each do |m|
+    FitnessThird.create(name: m, fitness_second_id: d.id, set: true, weight: true, fitness_second_name: d.name)
+end
+e = FitnessSecond.create(name: "二頭", fitness_id: obj.id)
+menu_e  = ['バーベルカール','プリチャーカール','ダンベルカール','コンセントレーションカール','インクラインカール','ハンマーカール','ケーブルカール']
+menu_e.each do |m|
+    FitnessThird.create(name: m, fitness_second_id: e.id, set: true, weight: true, fitness_second_name: e.name)
+end
+f = FitnessSecond.create(name: "腹筋", fitness_id: obj.id)
+menu_f = ['プランク','サイドプランク','サイドベント','シットアップ','クランチ','リバースクランチ','ヒップレイズ','レッグレイズ','ハンギングレッグレイズ','クロスクランチ','バイシクル']
+menu_f.each do |m|
+    FitnessThird.create(name: m, fitness_second_id: f.id, set: false, weight: false, fitness_second_name: f.name)
+end
+g = FitnessSecond.create(name: "下半身", fitness_id: obj.id)
+menu_f = ['フロントスクワット','ワイドスクワット','フロントランジ','サイドランジ','バックランジ','ステーショナリーランジ','レッグエクステンション',
+    'レッグカール','カーフレイズ','シングルレッグスクワット','ブルガリアンスクワット','シングルレッグデッドリフト','ルーマニアンデッドリフト','アブダクション',
+    'アダクション','シェル','ヒップリフト','シングルレッグヒップリフト','立位中殿','立位キック','バックキック','ヒップアブダクション'
+]
+menu_f.each do |m|
+    FitnessThird.create(name: m, fitness_second_id: f.id, set: true, weight: true, fitness_second_name: g.name)
+end
 
-require './db/seeds/fitness.rb'
-Fitness.create(name: "ヨガ", company_id: 1)
-Fitness.create(name: "整体", company_id: 1)
+obj_a = Fitness.create(name: "ヨガ", company_id: c_a.id)
+obj_b = Fitness.create(name: "整体", company_id: c_a.id)
 
-CustomerMenu.create(name: "整体", company_id: 1)
-CustomerMenu.create(name: "トレーニング", company_id: 1)
-CustomerMenu.create(name: "整体＋トレーニング", company_id: 1)
-CustomerMenu.create(name: "ヨガ", company_id: 1)
-CustomerMenu.create(name: "ボクササイズ", company_id: 1)
+CustomerMenu.create(name: "整体", company_id: c_a.id)
+CustomerMenu.create(name: "トレーニング", company_id: c_a.id)
+CustomerMenu.create(name: "整体＋トレーニング", company_id: c_a.id)
+CustomerMenu.create(name: "ヨガ", company_id: c_a.id)
+CustomerMenu.create(name: "ボクササイズ", company_id: c_a.id)
 
-Store.create(store_name: "代々木上原", store_address: "ああああああああああああああああああああ",number_of_rooms: 3, company_id: 1)
-Store.create(store_name: "東北沢", store_address: "ああああああああああああああああああああ",number_of_rooms: 2, company_id: 1)
+s_a = Store.create(store_name: "代々木上原", store_address: "ああああああああああああああああああああ",number_of_rooms: 3, company_id: c_a.id)
+s_b = Store.create(store_name: "東北沢", store_address: "ああああああああああああああああああああ",number_of_rooms: 2, company_id: c_a.id)
 
-Admin.create(email: "admin@gmail.com", password: "password", company_id: 1)
+Admin.create(email: "admin@gmail.com", password: "password", company_id: c_a.id)
 
-Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら", email: "room-a@gmail.com", password: "aaaaaa", company_id: 1)
-Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら",email: "rise-up-a@gmail.com", password: "aaaaaa", company_id: 1)
-Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら",email: "rise-up-ba@gmail.com", password: "bbbbbb", company_id: 1)
-TrainerFitness.create(fitness_id: 1, trainer_id: 1)
-TrainerFitness.create(fitness_id: 2, trainer_id: 1)
-TrainerFitness.create(fitness_id: 1, trainer_id: 2)
-TrainerFitness.create(fitness_id: 3, trainer_id: 2)
-TrainerFitness.create(fitness_id: 1, trainer_id: 3)
+t_a = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら", email: "room-a@gmail.com", password: "aaaaaa", company_id: c_a.id)
+t_b = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら",email: "rise-up-a@gmail.com", password: "aaaaaa", company_id: c_a.id)
+t_c = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら",email: "rise-up-ba@gmail.com", password: "bbbbbb", company_id: c_a.id)
+TrainerFitness.create(fitness_id: obj.id, trainer_id: t_a.id)
+TrainerFitness.create(fitness_id: obj_a.id, trainer_id: t_a.id)
+TrainerFitness.create(fitness_id: obj.id, trainer_id: t_b.id)
+TrainerFitness.create(fitness_id: obj_b.id, trainer_id: t_b.id)
+TrainerFitness.create(fitness_id: obj.id, trainer_id: t_c.id)
 
 time = [
     DateTime.new(Date.today.year, Date.today.month, Date.today.day, 7, 00, 0, 0.375),
@@ -52,11 +98,11 @@ time = [
 tommorow_a =  DateTime.new(Date.today.year, Date.today.month, Date.today.day + 1, 7, 00, 0, 0.375)
 tommorow_b =  DateTime.new(Date.today.year, Date.today.month, Date.today.day + 1, 18, 00, 0, 0.375)
 
-TrainerShift.create(start: time[0], finish: time[12], trainer_id: 1, store_id: 1)
-TrainerShift.create(start: time[0], finish: time[12], trainer_id: 2, store_id: 1)
-TrainerShift.create(start: time[0], finish: time[15], trainer_id: 3, store_id: 2)
-TrainerShift.create(start: tommorow_a, finish: tommorow_b , trainer_id: 1, store_id: 1)
-TrainerShift.create(start: tommorow_a, finish: tommorow_b , trainer_id: 2, store_id: 2)
+TrainerShift.create(start: time[0], finish: time[12], trainer_id: t_a.id, store_id: s_a.id)
+TrainerShift.create(start: time[0], finish: time[12], trainer_id: t_b.id, store_id: s_a.id)
+TrainerShift.create(start: time[0], finish: time[15], trainer_id: t_c.id, store_id: s_b.id)
+TrainerShift.create(start: tommorow_a, finish: tommorow_b , trainer_id: t_a.id, store_id: s_a.id)
+TrainerShift.create(start: tommorow_a, finish: tommorow_b , trainer_id: t_b.id, store_id: s_b.id)
 
 jobs = ["経営者・役員", "公務員", "金融", "コンサル", "保険", "メーカー",
     "商社", "不動産", "広告・マスコミ", "出版", "IT関連", "エンジニア", "医療","営業","主婦"]
@@ -94,40 +140,40 @@ a = [
 ]
 
 a.each do |aa|
-    c = Customer.create(first_name_kanji: "加藤" , last_name_kanji: "太郎", first_name_kana: "かとう", last_name_kana: "たろう",email: aa[0], password: aa[0], company_id: 1, confirmed_at: DateTime.now)
-    f = Customer.create(first_name_kanji: "加藤" , last_name_kanji: "太郎", first_name_kana: "かとう", last_name_kana: "たろう", email: aa[4], password: aa[5], company_id: 1, confirmed_at: DateTime.now)
+    c = Customer.create(first_name_kanji: "加藤" , last_name_kanji: "太郎", first_name_kana: "かとう", last_name_kana: "たろう",email: aa[0], password: aa[0], company_id: c_a.id, confirmed_at: DateTime.now)
+    f = Customer.create(first_name_kanji: "加藤" , last_name_kanji: "太郎", first_name_kana: "かとう", last_name_kana: "たろう", email: aa[4], password: aa[5], company_id: c_a.id, confirmed_at: DateTime.now)
     CustomerStatus.create(paid: true, room_plus: false, dozen_sessions: false,numbers_of_contractnt: 4, customer_id: c.id)
     CustomerStatus.create(paid: false, room_plus: false, dozen_sessions: false,numbers_of_contractnt: 8, customer_id: f.id)
     CustomerInfo.create(customer_id: c.id, age: 30, address: "愛知県名古屋市守山区白山", gender: "男", phone_number: "098765321", emergency_phone_number: "098765321")
 end
 Appointment.delete_all && CustomerRecord.delete_all && CustomerRecordSessionMenu.delete_all && Evaluation.delete_all
 
-a = Appointment.create(appointment_time: time[0],customer_id: 1, store_id: 1, fitness_id: 1 ,fitness_name: 'training', finish: true)
-b = Appointment.create(appointment_time: time[1],customer_id: 1, store_id: 1, fitness_id: 1 ,fitness_name: 'training', finish: true)
-c = Appointment.create(appointment_time:  time[10],customer_id: 1, store_id: 1, fitness_id: 2 ,fitness_name: 'yoga', finish: true)
-d = Appointment.create(appointment_time: time[2],customer_id: 1, store_id: 1, fitness_id: 2 ,fitness_name: 'yoga', finish: true)
-e = Appointment.create(appointment_time: time[3],customer_id: 1, store_id: 1, fitness_id: 3 ,fitness_name: 'seitai', finish: true)
-f = Appointment.create(appointment_time:  time[6],customer_id: 1, store_id: 1, fitness_id: 2 ,fitness_name: 'yoga', finish: true)
+a = Appointment.create(appointment_time: time[0],customer_id: 1, store_id: s_a.id, fitness_id: obj.id ,fitness_name: 'training', finish: true)
+b = Appointment.create(appointment_time: time[1],customer_id: 1, store_id: s_a.id, fitness_id: obj.id ,fitness_name: 'training', finish: true)
+c = Appointment.create(appointment_time:  time[10],customer_id: 1, store_id: s_a.id, fitness_id: obj_a.id ,fitness_name: 'yoga', finish: true)
+d = Appointment.create(appointment_time: time[2],customer_id: 1, store_id: s_a.id, fitness_id: obj_a.id ,fitness_name: 'yoga', finish: true)
+e = Appointment.create(appointment_time: time[3],customer_id: 1, store_id: s_a.id, fitness_id: obj_b.id ,fitness_name: 'seitai', finish: true)
+f = Appointment.create(appointment_time:  time[6],customer_id: 1, store_id: s_a.id, fitness_id: obj_a.id ,fitness_name: 'yoga', finish: true)
 
-aa = CustomerRecord.create(appointment_id: a.id, apo_time: a.appointment_time, customer_id: a.customer_id, trainer_id: 1)
-bb = CustomerRecord.create(appointment_id: b.id, apo_time: b.appointment_time,customer_id: b.customer_id, trainer_id: 2)
-cc = CustomerRecord.create(appointment_id: c.id, apo_time: c.appointment_time,customer_id: c.customer_id, trainer_id: 2)
-dd = CustomerRecord.create(appointment_id: d.id, apo_time: d.appointment_time, customer_id: d.customer_id, trainer_id: 1)
-ee = CustomerRecord.create(appointment_id: e.id, apo_time: e.appointment_time,customer_id: e.customer_id, trainer_id: 2)
-ff = CustomerRecord.create(appointment_id: f.id, apo_time: f.appointment_time,customer_id: f.customer_id, trainer_id: 1)
+aa = CustomerRecord.create(appointment_id: a.id, apo_time: a.appointment_time, customer_id: a.customer_id, trainer_id: t_a.id)
+bb = CustomerRecord.create(appointment_id: b.id, apo_time: b.appointment_time,customer_id: b.customer_id, trainer_id: t_b.id)
+cc = CustomerRecord.create(appointment_id: c.id, apo_time: c.appointment_time,customer_id: c.customer_id, trainer_id: t_b.id)
+dd = CustomerRecord.create(appointment_id: d.id, apo_time: d.appointment_time, customer_id: d.customer_id, trainer_id: t_a.id)
+ee = CustomerRecord.create(appointment_id: e.id, apo_time: e.appointment_time,customer_id: e.customer_id, trainer_id: t_b.id)
+ff = CustomerRecord.create(appointment_id: f.id, apo_time: f.appointment_time,customer_id: f.customer_id, trainer_id: t_a.id)
 
-CustomerRecordSessionMenu.create(time: 10,weight: 3,fitness_third_id: 1,customer_record_id: aa.id,fitness_id: 1, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(1).name)
-CustomerRecordSessionMenu.create(time: 50,weight: 5,fitness_third_id: 2,customer_record_id: aa.id,fitness_id: 1, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(2).name)
-CustomerRecordSessionMenu.create(time: 1,weight: 1,fitness_third_id: 2,customer_record_id: bb.id,fitness_id: 1, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(2).name)
-CustomerRecordSessionMenu.create(time: 30,weight: 2,fitness_third_id: 3,customer_record_id: bb.id,fitness_id: 1, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(3).name)
-CustomerRecordSessionMenu.create(time: 40,weight: 3,fitness_third_id: 10,customer_record_id: bb.id,fitness_id: 2, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(3).name)
-CustomerRecordSessionMenu.create(time: 1,weight: 1,fitness_third_id: 2,customer_record_id: cc.id,fitness_id: 1, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(4).name)
-CustomerRecordSessionMenu.create(time: 30,weight: 2,fitness_third_id: 3,customer_record_id: cc.id,fitness_id: 1, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(8).name)
-CustomerRecordSessionMenu.create(time: 40,weight: 3,fitness_third_id: 10,customer_record_id: cc.id,fitness_id: 2, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(7).name)
+CustomerRecordSessionMenu.create(time: 10,weight: 3,fitness_third_id: 1,customer_record_id: aa.id,fitness_id: obj.id, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(1).name)
+CustomerRecordSessionMenu.create(time: 50,weight: 5,fitness_third_id: 2,customer_record_id: aa.id,fitness_id: obj.id, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(2).name)
+CustomerRecordSessionMenu.create(time: 1,weight: 1,fitness_third_id: 2,customer_record_id: bb.id,fitness_id: obj.id, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(2).name)
+CustomerRecordSessionMenu.create(time: 30,weight: 2,fitness_third_id: 3,customer_record_id: bb.id,fitness_id: obj.id, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(3).name)
+CustomerRecordSessionMenu.create(time: 40,weight: 3,fitness_third_id: 10,customer_record_id: bb.id,fitness_id: obj_a.id, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(3).name)
+CustomerRecordSessionMenu.create(time: 1,weight: 1,fitness_third_id: 2,customer_record_id: cc.id,fitness_id: obj.id, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(4).name)
+CustomerRecordSessionMenu.create(time: 30,weight: 2,fitness_third_id: 3,customer_record_id: cc.id,fitness_id: obj.id, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(8).name)
+CustomerRecordSessionMenu.create(time: 40,weight: 3,fitness_third_id: 10,customer_record_id: cc.id,fitness_id: obj_a.id, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(7).name)
 
-CustomerRecordSessionMenu.create(time: 1,weight: 1,fitness_third_id: 2,customer_record_id: dd.id,fitness_id: 1, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(7).name)
-CustomerRecordSessionMenu.create(time: 30,weight: 2,fitness_third_id: 3,customer_record_id: ee.id,fitness_id: 1, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(5).name)
-CustomerRecordSessionMenu.create(time: 40,weight: 3,fitness_third_id: 10,customer_record_id: ff.id,fitness_id: 2, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(7).name)
+CustomerRecordSessionMenu.create(time: 1,weight: 1,fitness_third_id: 2,customer_record_id: dd.id,fitness_id: obj.id, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(7).name)
+CustomerRecordSessionMenu.create(time: 30,weight: 2,fitness_third_id: 3,customer_record_id: ee.id,fitness_id: obj.id, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(5).name)
+CustomerRecordSessionMenu.create(time: 40,weight: 3,fitness_third_id: 10,customer_record_id: ff.id,fitness_id: obj_a.id, fitness_name: Fitness.find(1).name, fitness_third_name: FitnessThird.find(7).name)
 
 Evaluation.create(trainer_id: aa.trainer_id, trainer_name: 'トレーナーA',customer_id: aa.customer_id,customer_record_id: aa.id, trainer_score: 2, food_score: 2)
 Evaluation.create(trainer_id: bb.trainer_id, trainer_name: 'Bさん',customer_id: bb.customer_id,customer_record_id: bb.id, trainer_score: 2, food_score: 1)
