@@ -13,11 +13,16 @@ class CustomerIndividualInfoController < ApplicationController
                 CustomerInterest.create(customer_id: current_v1_customer.id, interest_id: interest_id)
             end
             interests = current_v1_customer.interests
+            
             render json: {
                 message: "プロフィールを変更しました！", 
                 status: 200, 
                 data: customer_info,
                 interests: interests
+              }
+        else
+            render json: {
+                message: "ログインしてください、認証に失敗しました", 
               }
         end
     end

@@ -35,24 +35,24 @@ class CalendarController < ApplicationController
   # get '/calendar', to: 'calendar#select_store_fitness', as: 'calendar'
   def select_store_fitness
     # company_id を受け取って、store fitnessの情報を返す
-    if params[:company_id].nil?
-      # TODO
-      # company_id = find_company_id
-      company_id = 1
+    if v1_customer_signed_in?
+      company_id = current_v1_customer.comapny_id
+      @stores = Store.where(company_id: company_id)
+      @fitness = Fitness.where(company_id: company_id)
+      # @customer_menues = CustomerMenu.all
+      @fitness = Fitness.where(company_id: 1)
+      # response = {store: @stores, fitness: @fitness, year: Date.today.year, month: Date.today.month}
+      render :json => {
+        :store => @stores, 
+        :fitnesses => @fitness,
+        :year => Date.today.year,
+        :month => Date.today.month
+      }
     else
-      company_id = params[:company_id]
+      render :json => {
+        :message => "ログインしてください、認証が失敗しています"
+      }
     end
-    @stores = Store.where(company_id: company_id)
-    @fitness = Fitness.where(company_id: company_id)
-    # @customer_menues = CustomerMenu.all
-    @fitness = Fitness.where(company_id: 1)
-    # response = {store: @stores, fitness: @fitness, year: Date.today.year, month: Date.today.month}
-    render :json => {
-      :store => @stores, 
-      :fitnesses => @fitness,
-      :year => Date.today.year,
-      :month => Date.today.month
-    }
   end
 
   def customer_appointment_num_check(year, month, customer) #特定のお客さんがある月に予約した件数
