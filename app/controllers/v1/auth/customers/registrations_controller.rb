@@ -16,6 +16,7 @@ class V1::Auth::Customers::RegistrationsController < DeviseTokenAuth::Registrati
         end
     end
 
+
     protected
     
     def configure_sign_up_params

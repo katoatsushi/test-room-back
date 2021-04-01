@@ -18,4 +18,11 @@ class CustomerController < ApplicationController
             }
           end
     end
+
+    def get_company_id
+        company_id = Company.first.id
+        render json: {
+            id: company_id
+        }
+    end
 end

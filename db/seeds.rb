@@ -1,7 +1,7 @@
 MasterAdmin.create(email: "admin@gmail.com", password: "111111")
 MasterAdmin.create(email: "masteradmin@gmail.com", password: "111111")
 c_a = Company.create(name: "room")
-c_b = Company.create(name: "rise-up")
+# c_b = Company.create(name: "rise-up")
 
 obj = Fitness.create(name: "トレーニング", company_id: c_a.id)
 a = FitnessSecond.create(name: "胸", fitness_id: obj.id)

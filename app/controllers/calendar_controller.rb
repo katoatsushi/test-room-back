@@ -36,7 +36,7 @@ class CalendarController < ApplicationController
   def select_store_fitness
     # company_id を受け取って、store fitnessの情報を返す
     if v1_customer_signed_in?
-      company_id = current_v1_customer.comapny_id
+      company_id = current_v1_customer.company_id
       @stores = Store.where(company_id: company_id)
       @fitness = Fitness.where(company_id: company_id)
       # @customer_menues = CustomerMenu.all

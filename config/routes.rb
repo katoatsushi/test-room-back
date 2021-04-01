@@ -131,6 +131,10 @@ Rails.application.routes.draw do
   get '/appointments/vacancy/:company_id/:customer_menu_id/:year/:month/:day', to: 'appointments#vacancy', as: 'vacancy_appointment'
 
   post '/customer/:customer_id/appointments/new/:store_id/:customer_menu_id/:year/:month/:day', to: 'appointments#create', as: 'create_appointment'
+  
+  # 開発テスト用
+  get '/customer/get_company_id', to: 'customer#get_company_id', as: 'customer_get_company_id'
+
   get '/appointments/:id/edit/:year/:month/:day', to: 'appointments#edit', as:  'edit_appointment'
   #  予約キャンセル
   delete '/appointment/:id', to: 'appointments#destroy', as:  'delete_appointment'
