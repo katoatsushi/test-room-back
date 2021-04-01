@@ -8,6 +8,7 @@ class V1::Auth::Customers::RegistrationsController < DeviseTokenAuth::Registrati
     end
 
     def create
+        
         @customer = Customer.new(configure_sign_up_params)
         super
         if @customer.save
