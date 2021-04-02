@@ -113,6 +113,7 @@ Rails.application.routes.draw do
   get '/customer_menu_serch/:id', to: 'home#customer_menu_serch', as: 'customer_menu_serch'
 
   get '/customer_feedback', to: 'customer_page#feedback_to_trainer', as: 'customer_feedback'
+  get '/customer/after/sign_in', to: 'customer#after_login', as: 'customerafter_login'
   # カルテ発行
   post '/customer/:customer_id/appointment/:appointment_id/create_customer_record', to: 'customer_records#create', as: 'create_customer_record'
   # カルテ発行に伴う、Sessionの選択

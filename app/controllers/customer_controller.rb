@@ -25,4 +25,38 @@ class CustomerController < ApplicationController
             id: company_id
         }
     end
+
+    def after_login        
+        customer_info = current_v1_customer.customer_info
+        customer_status = current_v1_customer.customer_status
+        customer_interests = current_v1_customer.customer_interests
+        @records = CustomerRecord.where(customer_id: current_v1_customer.id).left_joins(:evaluation).where(evaluations: {id: nil})
+        evaluation_all = []
+        @records.each do |r|
+          r.apo_time.min == 0 ? min = "00": min = r.apo_time.min
+          record_info = {id: r.id, customer_id: r.customer_id, trainer_id: r.trainer_id, apo_time: r.apo_time, 
+            year: r.apo_time.year.to_s, month: r.apo_time.month.to_s, day: r.apo_time.day.to_s,  hour: r.apo_time.hour.to_s,  min: min }
+          menues = r.customer_record_session_menus
+          menues_all = []
+          menues.each do |m|
+            menues_all <<  {
+                  time: m.time, 
+                  set_num: m.set_num,
+                  fitness_name: m.fitness_name, 
+                  fitness_third_name: m.fitness_third_name,
+                  detail: m.detail
+                }
+          end
+          record_info["menues"] = menues_all
+          evaluation_all << record_info
+        end
+
+        render :json => {
+          :status => 200,
+          :evaluations => evaluation_all,
+          :customer_info => customer_info,
+          :customer_status => customer_status,
+          :customer_interests => customer_interests
+        }
+    end
 end

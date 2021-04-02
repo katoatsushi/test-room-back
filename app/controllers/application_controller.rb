@@ -25,17 +25,6 @@ class ApplicationController < ActionController::API
           end
           return @times
       end
-
-     #  def make_time_schedule_in_one_day(year, month, day)
-     #      start_time = DateTime.new(year, month,day, @start_time[0],@start_time[1],0, 0.375)
-     #      limit = DateTime.new(year, month,day, @finish_time[0], @finish_time[1],0, 0.375)
-     #      @times = [[start_time, start_time + @one_lesson_length*60]]
-     #      while(start_time <= limit) do
-     #        start_time = start_time + @one_lesson_length*60
-     #          @times << [start_time, start_time + @one_lesson_length*60]
-     #      end
-     #      return @times
-     #  end
       
      def info_check 
           if v1_customer_signed_in?
