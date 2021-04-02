@@ -29,7 +29,7 @@ class CustomerController < ApplicationController
     def after_login        
         customer_info = current_v1_customer.customer_info
         customer_status = current_v1_customer.customer_status
-        customer_interests = current_v1_customer.customer_interests
+        customer_interests = current_v1_customer.interests
         @records = CustomerRecord.where(customer_id: current_v1_customer.id).left_joins(:evaluation).where(evaluations: {id: nil})
         evaluation_all = []
         @records.each do |r|
