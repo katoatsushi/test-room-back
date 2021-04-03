@@ -15,9 +15,38 @@ class EvaluationsController < ApplicationController
 
   # POST /evaluations
   def create
+    
     @evaluation = Evaluation.new(evaluation_params)
     if @evaluation.save
-      render json: @evaluation, status: 200, location: @evaluation
+
+      @records = CustomerRecord.where(customer_id: current_v1_customer.id).left_joins(:evaluation).where(evaluations: {id: nil})
+      evaluation_all = []
+      @records.each do |r|
+        r.apo_time.min == 0 ? min = "00": min = r.apo_time.min
+        record_info = {id: r.id, customer_id: r.customer_id, trainer_id: r.trainer_id, apo_time: r.apo_time, 
+          year: r.apo_time.year.to_s, month: r.apo_time.month.to_s, day: r.apo_time.day.to_s,  hour: r.apo_time.hour.to_s,  min: min }
+        menues = r.customer_record_session_menus
+        menues_all = []
+        menues.each do |m|
+          menues_all <<  {
+                time: m.time, 
+                set_num: m.set_num,
+                fitness_name: m.fitness_name, 
+                fitness_third_name: m.fitness_third_name,
+                detail: m.detail
+              }
+        end
+        record_info["menues"] = menues_all
+        evaluation_all << record_info
+      end
+
+      render :json => {
+        :status => 200,
+        :evaluations => evaluation_all,
+        :data => @evaluation
+      }
+      
+      # render json: @evaluation, status: 200, location: @evaluation
     else
       render json: @evaluation.errors, status: :unprocessable_entity
     end

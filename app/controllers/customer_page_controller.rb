@@ -82,7 +82,7 @@ class CustomerPageController < ApplicationController
   def feedback_to_trainer
     #if v1_signed_in?
       # @records = CustomerRecord.where(customer_id: current_v1_customer.id).left_joins(:evaluation).where(evaluations: {id: nil})
-      @records = CustomerRecord.where(customer_id: 1).left_joins(:evaluation).where(evaluations: {id: nil})
+      @records = CustomerRecord.where(customer_id: current_v1_customer.id).left_joins(:evaluation).where(evaluations: {id: nil})
       evaluation_all = []
       @records.each do |r|
         if r.apo_time.min == 0

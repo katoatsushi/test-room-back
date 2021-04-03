@@ -35,8 +35,12 @@ class CalendarController < ApplicationController
   # get '/calendar', to: 'calendar#select_store_fitness', as: 'calendar'
   def select_store_fitness
     # company_id を受け取って、store fitnessの情報を返す
-    if v1_customer_signed_in?
-      company_id = current_v1_customer.company_id
+    if v1_customer_signed_in? || v1_trainer_signed_in?
+      if v1_customer_signed_in?
+        company_id = current_v1_customer.company_id
+      elsif v1_trainer_signed_in?
+        company_id = current_v1_trainer.company_id
+      end
       @stores = Store.where(company_id: company_id)
       @fitness = Fitness.where(company_id: company_id)
       # response = {store: @stores, fitness: @fitness, year: Date.today.year, month: Date.today.month}

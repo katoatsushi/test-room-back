@@ -74,6 +74,8 @@ class AppointmentsController < ApplicationController
     @appointment.fitness_id = customer_menu_id
     @appointment.fitness_name = Fitness.find(customer_menu_id).name
     @appointment.customer_id = params[:customer_id]
+    @appointment.appointment_time = DateTime.new(params["year"].to_i,params["month"].to_i, params["day"].to_i, params["hour"], params["min"], 0, 0.375)
+    
     if !@appointment.customer_id.nil?
       if @appointment.save
         render json: @appointment
