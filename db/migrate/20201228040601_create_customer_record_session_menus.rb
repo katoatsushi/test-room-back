@@ -2,7 +2,6 @@ class CreateCustomerRecordSessionMenus < ActiveRecord::Migration[6.0]
   def change
     create_table :customer_record_session_menus do |t|
       t.integer :time
-      # t.integer :set_num
       t.integer :weight
       t.references :fitness_third
       t.references :customer_record
