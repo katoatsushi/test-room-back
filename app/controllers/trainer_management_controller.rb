@@ -8,18 +8,17 @@ class TrainerManagementController < ApplicationController
                 res = {store: s}
                 #　今日より前の終了していないアポ
                 not_finish_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id})
-                .where(appointments: {finish: false})
-                .where(appointments: {store_id: s.id})
-                .where("appointment_time <= ?",today)
+                                .where(appointments: {finish: false}).where(appointments: {store_id: s.id})
+                                .where("appointment_time <= ?",today)
                 #　今月の終了したアポ
                 finish_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id})
                 .where(appointments: {finish: true})
                 .where(appointments: {store_id: s.id})
-                .where("appointment_time >= ?", DateTime.new(DateTime.now.year, DateTime.now.month, 1,0, 0))
+                .where("appointment_time >= ?", DateTime.new(DateTime.now.year, DateTime.now.month, 1,0, 0,0,0.375))
                 #　今月の全てのアポ
                 all_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id})
                 .where(appointments: {store_id: s.id})
-                .where("appointment_time >= ?", DateTime.new(DateTime.now.year, DateTime.now.month, 1,0, 0))
+                .where("appointment_time >= ?", DateTime.new(DateTime.now.year, DateTime.now.month, 1, 0, 0,0,0.375))
                 
                 res[:finish_data] = finish_data
                 res[:not_finish_data] = not_finish_data

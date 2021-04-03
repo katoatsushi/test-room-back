@@ -53,6 +53,7 @@ class CustomerRecordSessionMenusController < ApplicationController
   end
 
   def create_record_and_menues
+    
     if v1_trainer_signed_in?
     apo = params["customer_record_session_menu"]["apo"]
     # レコードを作成

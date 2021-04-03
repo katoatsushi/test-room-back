@@ -21,6 +21,7 @@ class FitnessesController < ApplicationController
 
   def res_second
     res = []
+    
     FitnessSecond.where(fitness_id: params[:id].to_i).each do |s|
       res << {second: s, third: s.fitness_thirds}
     end

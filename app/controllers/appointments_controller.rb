@@ -10,17 +10,13 @@ class AppointmentsController < ApplicationController
       times.each do |t|
         apos = Appointment.where(store_id: s.id).where("appointment_time >= ? AND appointment_time < ?", t[0], t[1])
         admin_schedules = BlackSchedule.where(store_id: s.id).where("not_free_time_start< ? AND ? <= not_free_time_finish", t[0]+@training_time*60, t[1]-@training_time*60)
-        vacancy_count = s.number_of_rooms - apos.length - admin_schedules.length
-        if(t[0].min == 0)
-          min_start = "00"
-        else
-          min_start = t[0].min.to_s
-        end
-        if(t[1].min == 0)
-          min_fin = "00"
-        else
-          min_fin = t[1].min.to_s
-        end
+        # vacancy_count = s.number_of_rooms - apos.length - admin_schedules.length
+
+        shifts_num = Trainer.joins(:trainer_shifts).select("*").where("start <= ? AND ? <= finish", t[0], t[1]).where(trainer_shifts: {store_id:  s.id}).where(company_id: 1).length
+        vacancy_count = shifts_num - apos.length - admin_schedules.length
+        # TrainerShift.joins(:trainers).select("*")
+        t[0].min == 0? min_start = "00" : min_start = t[0].min.to_s
+        t[1].min == 0? min_fin = "00" : min_fin = t[1].min.to_s
         schedule << {times: [[t[0].hour.to_s, min_start], [t[0].hour.to_s, min_fin]],vacancy_count: vacancy_count}
       end
       this_res[:schedule] = schedule
