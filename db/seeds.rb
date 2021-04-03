@@ -99,11 +99,11 @@ time = [
 tommorow_a =  DateTime.new(Date.today.year, Date.today.month, Date.today.day + 1, 7, 00, 0, 0.375)
 tommorow_b =  DateTime.new(Date.today.year, Date.today.month, Date.today.day + 1, 18, 00, 0, 0.375)
 
-TrainerShift.create(start: time[0], finish: time[12], trainer_id: t_a.id, store_id: s_a.id)
-TrainerShift.create(start: time[0], finish: time[12], trainer_id: t_b.id, store_id: s_a.id)
-TrainerShift.create(start: time[0], finish: time[15], trainer_id: t_c.id, store_id: s_b.id)
-TrainerShift.create(start: tommorow_a, finish: tommorow_b , trainer_id: t_a.id, store_id: s_a.id)
-TrainerShift.create(start: tommorow_a, finish: tommorow_b , trainer_id: t_b.id, store_id: s_b.id)
+# TrainerShift.create(start: time[0], finish: time[12], trainer_id: t_a.id, store_id: s_a.id)
+# TrainerShift.create(start: time[0], finish: time[12], trainer_id: t_b.id, store_id: s_a.id)
+# TrainerShift.create(start: time[0], finish: time[15], trainer_id: t_c.id, store_id: s_b.id)
+# TrainerShift.create(start: tommorow_a, finish: tommorow_b , trainer_id: t_a.id, store_id: s_a.id)
+# TrainerShift.create(start: tommorow_a, finish: tommorow_b , trainer_id: t_b.id, store_id: s_b.id)
 
 jobs = ["経営者・役員", "公務員", "金融", "コンサル", "保険", "メーカー",
     "商社", "不動産", "広告・マスコミ", "出版", "IT関連", "エンジニア", "医療","営業","主婦"]
