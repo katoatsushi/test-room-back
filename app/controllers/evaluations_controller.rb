@@ -29,8 +29,9 @@ class EvaluationsController < ApplicationController
         menues_all = []
         menues.each do |m|
           menues_all <<  {
+                customer_record_session_menu_id: m.id,
                 time: m.time, 
-                set_num: m.set_num,
+                weight: m.weight,
                 fitness_name: m.fitness_name, 
                 fitness_third_name: m.fitness_third_name,
                 detail: m.detail
