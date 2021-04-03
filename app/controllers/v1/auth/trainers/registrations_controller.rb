@@ -9,7 +9,6 @@ class V1::Auth::Trainers::RegistrationsController < DeviseTokenAuth::Registratio
             @trainer = Trainer.new(configure_sign_up_params_for_trainer)
             @trainer.company_id = current_v1_admin.company_id
             super
-            # binding.pry
             # render json: { response:  @trainer, status: 200 }
         else
             render json: { response:  

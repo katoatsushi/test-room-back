@@ -28,7 +28,6 @@ class CustomerInfosController < ApplicationController
   # POST /customer_infos
   def create
     if v1_customer_signed_in? 
-      binding.pry
       if @customer_info.save
         render json: @customer_info, status: 200, location: @customer_info
       else
