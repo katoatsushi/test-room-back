@@ -39,13 +39,22 @@ class AppointmentsController < ApplicationController
     times = make_time_schedule_in_one_day(params[:year], params[:month], params[:day])
     fitness = Fitness.find(params["customer_menu_id"].to_i)
     store = Store.find(params["store_id"].to_i)
-    trainers = Trainer.joins(:trainer_fitnesses).select("*").where(trainers: {company_id: fitness.company_id}).where(trainer_fitnesses: {fitness_id: fitness.id})
     @main = []
+    trainers = Trainer.where(company_id: fitness.company_id)
     times.each do |t|
       number_of_seats = 0
       trainers.each do |trainer|
-        # TODO::トレーナーのシフトに店舗の概念があるのであれば、ここで店舗のWhereも行う
-        number_of_seats +=  trainer.trainer_shifts.where("start <= ? AND  ? <= finish", t[0], t[1]).length
+        ok = false
+        # 要望のセッションメニューが当トレーナのできるセッションメニューに含まれているかのok
+        trainer.fitnesses.each do |f|
+          if f.id == fitness.id
+            ok = true
+          end
+        end
+        if ok
+          # 顧客様の希望店舗=トレーナーの指定日のシフトの店舗かつ希望セッションを行うことができる場合カウント
+          number_of_seats +=  trainer.trainer_shifts.where("start <= ? AND  ? <= finish", t[0], t[1]).where(store_id:  store.id).length
+        end
       end
       #　トレーナーの人数が部屋数を超えていた場合、部屋数を予約可能枠数とする
       number_of_seats > store.number_of_rooms  ? number_of_seats = store.number_of_rooms : number_of_seats

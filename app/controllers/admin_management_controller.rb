@@ -81,7 +81,7 @@ class AdminManagementController < ApplicationController
                 shift = TrainerShift.find(d["shifts"]["id"])
                 shift.start = d["shifts"]["start"].to_datetime
                 shift.finish = d["shifts"]["finish"].to_datetime
-                shift.store_id = d["store_id"]
+                shift.store_id = d["shifts"]["store"]["id"]
                 shift.save
             end
         end

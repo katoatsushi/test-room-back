@@ -69,8 +69,10 @@ t_b = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_n
 t_c = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら",email: "rise-up-ba@gmail.com", password: "bbbbbb", company_id: c_a.id)
 TrainerFitness.create(fitness_id: obj.id, trainer_id: t_a.id)
 TrainerFitness.create(fitness_id: obj_a.id, trainer_id: t_a.id)
+
 TrainerFitness.create(fitness_id: obj.id, trainer_id: t_b.id)
 TrainerFitness.create(fitness_id: obj_b.id, trainer_id: t_b.id)
+
 TrainerFitness.create(fitness_id: obj.id, trainer_id: t_c.id)
 
 time = [
@@ -145,7 +147,7 @@ end
 #     CustomerStatus.create(paid: false, room_plus: false, dozen_sessions: false,numbers_of_contractnt: 8, customer_id: f.id)
 #     CustomerInfo.create(customer_id: c.id, age: 30, address: "愛知県名古屋市守山区白山", gender: "男", phone_number: "098765321", emergency_phone_number: "098765321")
 # end
-# Appointment.delete_all && CustomerRecord.delete_all && CustomerRecordSessionMenu.delete_all && Evaluation.delete_all
+# Appointment.delete_all && CustomerRecord.delete_all && CustomerRecordSessionMenu.delete_all && Evaluation.delete_all && TrainerShift.delete_all
 
 # a = Appointment.create(appointment_time: time[0],customer_id: 1, store_id: s_a.id, fitness_id: obj.id ,fitness_name: 'training', finish: true)
 # b = Appointment.create(appointment_time: time[1],customer_id: 1, store_id: s_a.id, fitness_id: obj.id ,fitness_name: 'training', finish: true)
