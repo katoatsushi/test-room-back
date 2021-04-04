@@ -5,8 +5,8 @@ class V1::Auth::Admins::RegistrationsController < DeviseTokenAuth::Registrations
     if v1_master_admin_signed_in?
         @admin = Admin.new(configure_sign_up_params)
         super
-        if @admin.save
-            render json: { model: 'admin',response:  @admin }
+        if @admin.save            
+            render json: { model: 'admin', response:  @admin }
           # CustomerStatus.create(paid: false, room_plus: false, dozen_sessions: false, numbers_of_contractnt: 0, customer_id: @customer.id)
         end
     else
