@@ -6,11 +6,16 @@ class CustomerInfosController < ApplicationController
     customer = Customer.find(params[:id])
     # customer = Customer.left_joins(:customer_info).select("*")
     customer_status = customer.customer_status
+    customer_record_count = customer.appointments.where(finish: true).count
+    appo_count = customer.appointments.where(finish: false).count
+    
     customer_info = customer.customer_info
     render json: {
       customer: customer,
       customer_status: customer_status,
-      customer_info: customer_info
+      customer_info: customer_info,
+      customer_record_len: customer_record_count,
+      appo_count: appo_count
     }
   end
   # GET /customer_infos
