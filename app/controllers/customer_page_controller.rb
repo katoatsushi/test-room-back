@@ -79,6 +79,17 @@ class CustomerPageController < ApplicationController
     }
   end
 
+  def my_past_records
+
+    if v1_customer_signed_in?
+      records = current_v1_customer.appointments.where(finish: true)
+      render :json => {
+        :status => 200,
+        :customer_records => records
+      }
+    end
+  end
+
   def feedback_to_trainer
     #if v1_signed_in?
       # @records = CustomerRecord.where(customer_id: current_v1_customer.id).left_joins(:evaluation).where(evaluations: {id: nil})

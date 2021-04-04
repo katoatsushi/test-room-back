@@ -97,6 +97,7 @@ Rails.application.routes.draw do
   resources :companies
   # お客様の詳細ページ
   get '/customer_page/:id', to: 'customer_page#show', as: 'get_customer'
+  get '/customer_page/my_past/records', to: 'customer_page#my_past_records', as: 'get_customer_my_past_records'
   # 全お客様のページ
   get '/customer_page_all/:company_id', to: 'customer_page#index', as: 'get_all_customers'
   # お客様の職業選択
