@@ -68,7 +68,18 @@ class AdminManagementController < ApplicationController
     def update_trainer_shift
         datas = params["data"]
         datas.each do |d|
-            if d["shifts"]["id"].nil?
+            if d["shifts"]["id"]
+                # 変更の場合
+                shift = TrainerShift.find(d["shifts"]["id"])
+                shift.start = d["shifts"]["start"].to_datetime
+                shift.finish = d["shifts"]["finish"].to_datetime
+                if d["shifts"]["store"]
+                    if d["shifts"]["store"]["id"]
+                        shift.store_id = d["shifts"]["store"]["id"]
+                    end
+                end
+                shift.save
+            else
                 # 新規の場合
                 new_shift = TrainerShift.new
                 new_shift.start = d["shifts"]["start"].to_datetime
@@ -76,14 +87,30 @@ class AdminManagementController < ApplicationController
                 new_shift.store_id = d["shifts"]["store"]["id"]
                 new_shift.trainer_id = d["trainer_id"]
                 new_shift.save
-            else
-                # 変更の場合
-                shift = TrainerShift.find(d["shifts"]["id"])
-                shift.start = d["shifts"]["start"].to_datetime
-                shift.finish = d["shifts"]["finish"].to_datetime
-                shift.store_id = d["shifts"]["store"]["id"]
-                shift.save
             end
+
+            # if d["shifts"].nil?
+            #     # 新規の場合
+            #     new_shift = TrainerShift.new
+            #     new_shift.start = d["shifts"]["start"].to_datetime
+            #     new_shift.finish = d["shifts"]["finish"].to_datetime
+            #     new_shift.store_id = d["shifts"]["store"]["id"]
+            #     new_shift.trainer_id = d["trainer_id"]
+            #     new_shift.save
+            # else
+            #     if d["shifts"]["id"]
+            #         # 変更の場合
+            #         shift = TrainerShift.find(d["shifts"]["id"])
+            #         shift.start = d["shifts"]["start"].to_datetime
+            #         shift.finish = d["shifts"]["finish"].to_datetime
+            #         if d["shifts"]["store"]
+            #             if d["shifts"]["store"]["id"]
+            #                 shift.store_id = d["shifts"]["store"]["id"]
+            #             end
+            #         end
+            #         shift.save
+            #     end
+            # end
         end
     end
 
