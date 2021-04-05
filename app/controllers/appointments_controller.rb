@@ -76,6 +76,7 @@ class AppointmentsController < ApplicationController
     store_id = params[:store_id].to_i
     customer_menu_id = params[:customer_menu_id].to_i
     @appointment.store_id = store_id
+    @appointment.store_name = Store.find(store_id).store_name
     @appointment.fitness_id = customer_menu_id
     @appointment.fitness_name = Fitness.find(customer_menu_id).name
     @appointment.customer_id = params[:customer_id]

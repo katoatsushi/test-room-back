@@ -2,8 +2,14 @@ class TrainerManagementController < ApplicationController
     def get_customer_records
         if v1_trainer_signed_in?
             # 今日以下のお客さんの予約を返す
-            today = Time.current.to_datetime
+            # today = Time.current.to_datetime
+            t = Time.now
+            today  = DateTime.new(t.year, t.month, t.day + 1)
+            # todayを今日の終わりにする
             response = []
+            initial_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id})
+                            .where(appointments: {finish: false}).where("appointment_time <= ?",today)
+
             Store.where(company_id: current_v1_trainer.company_id).each do |s|
                 res = {store: s}
                 #　今日より前の終了していないアポ
@@ -19,14 +25,16 @@ class TrainerManagementController < ApplicationController
                 all_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id})
                 .where(appointments: {store_id: s.id})
                 .where("appointment_time >= ?", DateTime.new(DateTime.now.year, DateTime.now.month, 1, 0, 0,0,0.375))
-                
+
                 res[:finish_data] = finish_data
                 res[:not_finish_data] = not_finish_data
                 res[:all_data] = all_data
+
                 response << res
             end
             render json: {
                 data: response,
+                intial_data: initial_data,
                 status: 200
             }
         end

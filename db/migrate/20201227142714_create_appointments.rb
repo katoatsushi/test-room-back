@@ -9,6 +9,7 @@ class CreateAppointments < ActiveRecord::Migration[6.0]
       t.text :free_box
        # 店舗選択
       t.integer :store_id
+      t.string :store_name
        # セッション項目
       t.references :fitness
       t.string :fitness_name

@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 2021_03_01_225827) do
     t.bigint "customer_id"
     t.text "free_box"
     t.integer "store_id"
+    t.string "store_name"
     t.bigint "fitness_id"
     t.string "fitness_name"
     t.boolean "finish", default: false
