@@ -70,7 +70,6 @@ class AppointmentsController < ApplicationController
     render json: @main
   end
 
-  # POST /appointments
   def create
     @appointment = Appointment.new(appointment_params)
     store_id = params[:store_id].to_i
