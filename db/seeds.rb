@@ -53,12 +53,6 @@ end
 obj_a = Fitness.create(name: "ヨガ", company_id: c_a.id)
 obj_b = Fitness.create(name: "整体", company_id: c_a.id)
 
-CustomerMenu.create(name: "整体", company_id: c_a.id)
-CustomerMenu.create(name: "トレーニング", company_id: c_a.id)
-CustomerMenu.create(name: "整体＋トレーニング", company_id: c_a.id)
-CustomerMenu.create(name: "ヨガ", company_id: c_a.id)
-CustomerMenu.create(name: "ボクササイズ", company_id: c_a.id)
-
 s_a = Store.create(store_name: "代々木上原", store_address: "ああああああああああああああああああああ",number_of_rooms: 3, company_id: c_a.id)
 s_b = Store.create(store_name: "東北沢", store_address: "ああああああああああああああああああああ",number_of_rooms: 2, company_id: c_a.id)
 
