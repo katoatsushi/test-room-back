@@ -1,4 +1,6 @@
 class TrainerManagementController < ApplicationController
+    before_action :authenticate_v1_trainer!, only: [:all_customer]
+    
     def get_customer_records
         if v1_trainer_signed_in?
             # 今日以下のお客さんの予約を返す
@@ -83,5 +85,15 @@ class TrainerManagementController < ApplicationController
             }
         end
     end
+
+    def all_customer
+        all_customers =  Customer.eager_load(:customer_status).eager_load(:customer_info).select("*").where(company_id: current_v1_trainer.company_id)
+        render json: {
+            error: false,
+            all_customers: all_customers,
+            status: 200
+        }
+    end
+
 end
 

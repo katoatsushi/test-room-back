@@ -37,12 +37,6 @@ class HomeController < ApplicationController
     }
   end
 
-  def customer_menu_serch
-    render json: { 
-      customer_menu: CustomerMenu.find(params[:id])
-    }
-  end
-
   def index
     @all_company = Company.all
     render json: @all_company

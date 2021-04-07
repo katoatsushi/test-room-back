@@ -26,9 +26,9 @@ class ApplicationController < ActionController::API
           return @times
       end
       
-     def info_check 
-          if v1_customer_signed_in?
-          elsif v1_trainer_signed_in?
-          end
-     end
+     # def info_check 
+     #      if v1_customer_signed_in?
+     #      elsif v1_trainer_signed_in?
+     #      end
+     # end
 end

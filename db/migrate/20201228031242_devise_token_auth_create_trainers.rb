@@ -34,14 +34,12 @@ class DeviseTokenAuthCreateTrainers < ActiveRecord::Migration[6.0]
       t.string :last_name_kanji
       t.string :first_name_kana
       t.string :last_name_kana
-      t.datetime :birthday
-      t.integer :age
-      t.string :gender
-      t.string :phonenumber
-      t.string :emergency_phonenumber
-      # t.string :name
-      # t.string :nickname
-      # t.string :image
+
+      # t.datetime :birthday
+      # t.integer :age
+      # t.string :gender
+      # t.string :phonenumber
+      # t.string :emergency_phonenumber
       t.string :email
 
       ## Tokens

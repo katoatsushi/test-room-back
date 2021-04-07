@@ -121,14 +121,6 @@ ActiveRecord::Schema.define(version: 2021_03_01_225827) do
     t.index ["interest_id"], name: "index_customer_interests_on_interest_id"
   end
 
-  create_table "customer_menus", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
-    t.integer "point"
-    t.integer "company_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-  end
-
   create_table "customer_record_session_menus", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "time"
     t.integer "weight"
@@ -366,11 +358,6 @@ ActiveRecord::Schema.define(version: 2021_03_01_225827) do
     t.string "last_name_kanji"
     t.string "first_name_kana"
     t.string "last_name_kana"
-    t.datetime "birthday"
-    t.integer "age"
-    t.string "gender"
-    t.string "phonenumber"
-    t.string "emergency_phonenumber"
     t.string "email"
     t.text "tokens"
     t.datetime "created_at", precision: 6, null: false

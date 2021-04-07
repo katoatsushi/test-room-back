@@ -6,5 +6,4 @@ class Company < ApplicationRecord
     has_many :customers
     has_many :trainers
     has_many :admins
-    has_many :customer_menues
 end

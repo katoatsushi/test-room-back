@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
   root 'home#index'
-  resources :customer_menus
   resources :black_schedules
   resources :trainer_infos
   resources :evaluations
@@ -22,7 +21,8 @@ Rails.application.routes.draw do
   put  '/customer_statuses/:id', to: 'customer_statuses#update', as: 'update_customer_status'
   get '/after_customer_sign_in', to: 'customer#return_customers', as: 'after_customer_sign_in'
 
-  get '/get/all_customers',to: 'admin_management#all_customer', as: 'all_customer'
+  get '/admin/get/all_customers',to: 'admin_management#all_customer', as: 'admin_all_customer'
+  get '/trainer/get/all_customers',to: 'trainer_management#all_customer', as: 'trainer_all_customer'
   get '/serch/customers',to: 'admin_management#search_customer', as: 'search_customer'
   #  トレーナーのシフトを送る
   get '/get_trainer_shifts',to: 'admin_management#get_trainer_shifts', as: 'get_trainer_shifts'
@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   # ログイン・パスワード
   namespace :v1 do
     # マスタアカウント
+
     mount_devise_token_auth_for "MasterAdmin", at: "master_admin_auth", controllers: {
       passwords: 'v1/auth/master_admins/passwords',
       sessions: 'v1/auth/master_admins/sessions'
@@ -111,7 +112,6 @@ Rails.application.routes.draw do
   get '/admin_search', to: 'home#admin_search', as: 'admin_search'
   get '/trainer_search', to: 'home#trainer_search', as: 'trainer_search'
   get '/master_admin_search', to: 'home#master_admin_search', as: 'master_admin_search'
-  get '/customer_menu_serch/:id', to: 'home#customer_menu_serch', as: 'customer_menu_serch'
 
   get '/customer_feedback', to: 'customer_page#feedback_to_trainer', as: 'customer_feedback'
   get '/customer/after/sign_in', to: 'customer#after_login', as: 'customerafter_login'
@@ -127,13 +127,18 @@ Rails.application.routes.draw do
   # お客さんは自分で予約を行う場合
   get '/calendar', to: 'calendar#select_store_fitness', as: 'calendar'
 
-  get '/calendar/:store_id/:customer_menu_id/:year/:month', to: 'calendar#index', as: 'calendar_change'
-  get '/appointments/new/:store_id/:customer_menu_id/:year/:month/:day', to: 'appointments#new', as: 'new_appointment'
-  # 空き状況
-  get '/appointments/vacancy/:company_id/:customer_menu_id/:year/:month/:day', to: 'appointments#vacancy', as: 'vacancy_appointment'
-
-  post '/customer/:customer_id/appointments/new/:store_id/:customer_menu_id/:year/:month/:day', to: 'appointments#create', as: 'create_appointment'
+  # get '/calendar/:store_id/:customer_menu_id/:year/:month', to: 'calendar#index', as: 'calendar_change'
+  # get '/appointments/new/:store_id/:customer_menu_id/:year/:month/:day', to: 'appointments#new', as: 'new_appointment'
+  # # 空き状況
+  # get '/appointments/vacancy/:company_id/:customer_menu_id/:year/:month/:day', to: 'appointments#vacancy', as: 'vacancy_appointment'
+  # post '/customer/:customer_id/appointments/new/:store_id/:customer_menu_id/:year/:month/:day', to: 'appointments#create', as: 'create_appointment'
   
+  get '/calendar/:store_id/:fitness_id/:year/:month', to: 'calendar#index', as: 'calendar_change'
+  get '/appointments/new/:store_id/:fitness_id/:year/:month/:day', to: 'appointments#new', as: 'new_appointment'
+  # 空き状況
+  get '/appointments/vacancy/:company_id/:fitness_id/:year/:month/:day', to: 'appointments#vacancy', as: 'vacancy_appointment'
+  post '/customer/:customer_id/appointments/new/:store_id/:fitness_id/:year/:month/:day', to: 'appointments#create', as: 'create_appointment'
+
   # 開発テスト用
   get '/customer/get_company_id', to: 'customer#get_company_id', as: 'customer_get_company_id'
 

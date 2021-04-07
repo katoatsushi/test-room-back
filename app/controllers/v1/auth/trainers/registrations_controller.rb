@@ -22,6 +22,7 @@ class V1::Auth::Trainers::RegistrationsController < DeviseTokenAuth::Registratio
     protected
 
     def configure_sign_up_params_for_trainer
-        devise_parameter_sanitizer.permit(:sign_up, keys: [:company_id, :first_name_kanji, :last_name_kanji, :first_name_kana, :last_name_kana])
+        devise_parameter_sanitizer.permit(:sign_up, keys: [:company_id, :first_name_kanji, 
+                                                            :last_name_kanji, :first_name_kana, :last_name_kana])
     end
 end

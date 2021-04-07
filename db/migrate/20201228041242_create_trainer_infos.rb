@@ -8,6 +8,13 @@ class CreateTrainerInfos < ActiveRecord::Migration[6.0]
       t.string :gender
       t.belongs_to :trainer, index: { unique: true }, foreign_key: true
       t.text :avatar_url
+
+      # t.datetime :birthday
+      # t.integer :age
+      # t.string :gender
+      # t.string :phonenumber
+      # t.string :emergency_phonenumber
+
       # t.references :trainer
       t.timestamps
     end

@@ -1,4 +1,6 @@
 class AdminManagementController < ApplicationController
+    before_action :authenticate_v1_admin!, only: [:all_customer]
+  
     require 'date'
 
     def set_customer_status
@@ -6,12 +8,11 @@ class AdminManagementController < ApplicationController
     end
 
     def all_customer
-        if v1_admin_signed_in?
-            all_customers =  Customer.eager_load(:customer_status).eager_load(:customer_info).select("*").where(company_id: current_v1_admin.company_id)
-        elsif v1_trainer_signed_in?
-            all_customers =  Customer.eager_load(:customer_status).eager_load(:customer_info).select("*").where(company_id: current_v1_trainer.company_id)
-        end
+        all_customers =  Customer.eager_load(:customer_status).
+                        eager_load(:customer_info).select("*").
+                        where(company_id: current_v1_admin.company_id)
         render json: {
+            error: false,
             all_customers: all_customers,
             status: 200
         }

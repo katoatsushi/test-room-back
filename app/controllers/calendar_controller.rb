@@ -6,10 +6,10 @@ class CalendarController < ApplicationController
     else
       customer = Customer.find(params[:customer_id])
     end
-    if !params["customer_menu_id"].nil?
-      @customer_menu_id = params["customer_menu_id"].to_i
+    if !params["fitness_id"].nil?
+      @fitness_id = params["fitness_id"].to_i
     else
-      @customer_menu_id = params["fitness"]["customer_menu_id"].to_i
+      @fitness_id = params["fitness"]["fitness_id"].to_i
     end
     if !params["store_id"].nil?
       @store_id = params["store_id"].to_i
