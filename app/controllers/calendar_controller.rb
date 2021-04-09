@@ -41,7 +41,7 @@ class CalendarController < ApplicationController
       elsif v1_trainer_signed_in?
         company_id = current_v1_trainer.company_id
       end
-      @stores = Store.where(company_id: company_id)
+      @stores = Store.where(company_id: company_id,deactivate: false)
       @fitness = Fitness.where(company_id: company_id)
       # response = {store: @stores, fitness: @fitness, year: Date.today.year, month: Date.today.month}
       render :json => {

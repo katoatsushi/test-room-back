@@ -49,7 +49,7 @@ class HomeController < ApplicationController
   
     @today_schedules = []
     @store_array = []
-    Store.where(company_id: params[:company_id]).each do |s|
+    Store.where(company_id: params[:company_id],deactivate: false).each do |s|
       @store_array << s
       schedules_array = []
       @this_days_times.each do |t|

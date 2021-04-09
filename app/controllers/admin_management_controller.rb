@@ -20,7 +20,7 @@ class AdminManagementController < ApplicationController
 
     def get_trainer_shifts    
         company_id = params["company_id"].to_i
-        stores = Store.where(company_id: company_id)
+        stores = Store.where(company_id: company_id,deactivate: false)
         year = params["year"].to_i
         month = params["month"].to_i
         month = month - 1

@@ -1,6 +1,6 @@
 class TrainerManagementController < ApplicationController
-    before_action :authenticate_v1_trainer!, only: [:all_customer]
-    
+    before_action :authenticate_v1_trainer!, only: [:all_customer, :my_evaluation]
+
     def get_customer_records
         if v1_trainer_signed_in?
             # 今日以下のお客さんの予約を返す
@@ -12,7 +12,7 @@ class TrainerManagementController < ApplicationController
             initial_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id})
                             .where(appointments: {finish: false}).where("appointment_time <= ?",today)
 
-            Store.where(company_id: current_v1_trainer.company_id).each do |s|
+            Store.where(company_id: current_v1_trainer.company_id,deactivate: false).each do |s|
                 res = {store: s}
                 #　今日より前の終了していないアポ
                 not_finish_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id})
@@ -95,5 +95,16 @@ class TrainerManagementController < ApplicationController
         }
     end
 
+    def my_evaluation
+        my_data = Appointment.includes(customer_record: :evaluation)
+                                .where(customer_records: {trainer_id: current_v1_trainer.id})
+                                .group("appointments.fitness_name").average("evaluations.trainer_score")
+        response = {details: "セッションメニューごとの評価平均点", name: my_data.keys, score: my_data.values}
+
+        render json: {
+            data:  response,
+            status: 200
+        }
+    end
 end
 

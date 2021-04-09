@@ -304,6 +304,7 @@ ActiveRecord::Schema.define(version: 2021_03_01_225827) do
     t.string "tel"
     t.integer "number_of_rooms"
     t.bigint "company_id"
+    t.boolean "deactivate", default: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["company_id"], name: "index_stores_on_company_id"

@@ -6,6 +6,7 @@ class CreateStores < ActiveRecord::Migration[6.0]
       t.string :tel
       t.integer :number_of_rooms
       t.references :company
+      t.boolean :deactivate, default: false
       t.timestamps
     end
   end

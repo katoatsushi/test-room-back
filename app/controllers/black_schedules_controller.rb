@@ -4,7 +4,7 @@ class BlackSchedulesController < ApplicationController
 
   # GET /black_schedules
   def index
-    @stores = Store.where(company_id: current_v1_admin.company_id)
+    @stores = Store.where(company_id: current_v1_admin.company_id,deactivate: false)
     @black_schedules = BlackSchedule.all
     render json: {
       stores: @stores, 

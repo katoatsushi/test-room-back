@@ -3,6 +3,7 @@ class CustomerInfosController < ApplicationController
 
   # 住所・電話番号・有料会員などの情報
   def return_customer_all_info
+    # TODO::お客様の予約残り数は今月のもの。
     customer = Customer.find(params[:id])
     # customer = Customer.left_joins(:customer_info).select("*")
     customer_status = customer.customer_status

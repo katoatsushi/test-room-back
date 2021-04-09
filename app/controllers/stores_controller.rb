@@ -1,11 +1,15 @@
 class StoresController < ApplicationController
   before_action :set_store, only: [:show, :update, :destroy]
+  before_action :authenticate_v1_admin!, only: [:create, :update, :all, :deactivate]
 
   # GET /stores
   def index
-    @stores = Store.all
-
-    render json: @stores
+    @company = Company.find(current_v1_admin.company_id)
+    @stores = Store.where(company_id: current_v1_admin.company_id,deactivate: false)
+    render json: {
+      stores: @stores,
+      company: @company
+    }
   end
 
   # GET /stores/1
@@ -16,7 +20,7 @@ class StoresController < ApplicationController
   # POST /stores
   def create
     @store = Store.new(store_params)
-
+    @store.company_id = current_v1_admin.company_id
     if @store.save
       render json: @store, status: 200, location: @store
     else
@@ -33,6 +37,14 @@ class StoresController < ApplicationController
     end
   end
 
+  def deactivate
+    id = params[:id].to_i
+    store = Store.find(id)
+    store.deactivate = true
+    store.save
+    binding.pry
+  end
+
   # DELETE /stores/1
   def destroy
     @store.destroy
@@ -46,6 +58,6 @@ class StoresController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def store_params
-      params.fetch(:store, {})
+      params.require(:store).permit(:company_id, :number_of_rooms, :store_address, :store_name, :tel)
     end
 end

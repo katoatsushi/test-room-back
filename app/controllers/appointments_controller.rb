@@ -4,7 +4,7 @@ class AppointmentsController < ApplicationController
   def vacancy
     times = make_time_schedule_in_one_day(params[:year], params[:month], params[:day])
     response = []
-    Store.where(company_id: params[:company_id]).each do |s|
+    Store.where(company_id: params[:company_id],deactivate: false).each do |s|
       this_res = {store: s}
       schedule = []
       times.each do |t|
@@ -26,7 +26,7 @@ class AppointmentsController < ApplicationController
       message: "成功", 
       status: 200, 
       data: response, 
-      stores: Store.where(company_id: params[:company_id])
+      stores: Store.where(company_id: params[:company_id],deactivate: false)
     }
   end
 

@@ -20,9 +20,13 @@ Rails.application.routes.draw do
   # 会員情報を更新
   put  '/customer_statuses/:id', to: 'customer_statuses#update', as: 'update_customer_status'
   get '/after_customer_sign_in', to: 'customer#return_customers', as: 'after_customer_sign_in'
-
+  # 全顧客情報を取得
   get '/admin/get/all_customers',to: 'admin_management#all_customer', as: 'admin_all_customer'
   get '/trainer/get/all_customers',to: 'trainer_management#all_customer', as: 'trainer_all_customer'
+  
+  # トレーナーの自身の評価
+  get '/trainer/get/my_evaluation',to: 'trainer_management#my_evaluation', as: 'trainer_my_evaluation'
+  
   get '/serch/customers',to: 'admin_management#search_customer', as: 'search_customer'
   #  トレーナーのシフトを送る
   get '/get_trainer_shifts',to: 'admin_management#get_trainer_shifts', as: 'get_trainer_shifts'
@@ -38,6 +42,10 @@ Rails.application.routes.draw do
   get '/show/record/:id', to: 'trainer_management#check_finished_record', as: 'check_finished_record'
   # 発行済みのレコードの削除
   delete '/delete/record/:appointment_id', to: 'trainer_management#record_delete', as: 'record_delete'
+  
+  # 店舗を有効化から外す
+  put '/admin/store/deactivate/:id', to: 'stores#deactivate', as: 'store_deactivate'
+  
   resources :customer_weights
   # ログイン・パスワード
   namespace :v1 do

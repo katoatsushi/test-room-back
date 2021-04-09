@@ -1,5 +1,6 @@
 class CustomerWeightsController < ApplicationController
   before_action :set_customer_weight, only: [:show, :update, :destroy]
+  before_action :authenticate_v1_customer!, only: [:create, :index]
 
   # GET /customer_weights
   def index
@@ -19,7 +20,7 @@ class CustomerWeightsController < ApplicationController
   end
 
   # POST /customer_weights
-  def create
+  def create    
     @customer_weight = CustomerWeight.new(customer_weight_params)
     @customer_weight.customer_id = current_v1_customer.id
     if @customer_weight.save
