@@ -1,5 +1,5 @@
 class TrainerManagementController < ApplicationController
-    before_action :authenticate_v1_trainer!, only: [:all_customer, :my_evaluation]
+    before_action :authenticate_v1_trainer!, only: [:all_customer, :my_evaluation, :my_requested_shift]
 
     def get_customer_records
         if v1_trainer_signed_in?
@@ -31,7 +31,6 @@ class TrainerManagementController < ApplicationController
                 res[:finish_data] = finish_data
                 res[:not_finish_data] = not_finish_data
                 res[:all_data] = all_data
-
                 response << res
             end
             render json: {
@@ -105,6 +104,15 @@ class TrainerManagementController < ApplicationController
             data:  response,
             status: 200
         }
+    end
+
+    def my_requested_shift
+        # TODO トレーナーの既存のシフトを返す
+        my_shifts = TrainerShift.where(trainer_id: current_v1_trainer.id)
+        year = params["year"].to_i
+        month = params["month"].to_i
+        binding.pry
+        
     end
 end
 

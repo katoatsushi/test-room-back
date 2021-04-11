@@ -5,7 +5,8 @@ class StoresController < ApplicationController
   # GET /stores
   def index
     @company = Company.find(current_v1_admin.company_id)
-    @stores = Store.where(company_id: current_v1_admin.company_id,deactivate: false)
+    # @stores = Store.where(company_id: current_v1_admin.company_id,deactivate: false)
+    @stores = Store.where(company_id: current_v1_admin.company_id)
     render json: {
       stores: @stores,
       company: @company
@@ -42,7 +43,6 @@ class StoresController < ApplicationController
     store = Store.find(id)
     store.deactivate = true
     store.save
-    binding.pry
   end
 
   # DELETE /stores/1

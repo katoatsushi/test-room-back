@@ -23,7 +23,7 @@ class AdminManagementController < ApplicationController
         stores = Store.where(company_id: company_id,deactivate: false)
         year = params["year"].to_i
         month = params["month"].to_i
-        month = month - 1
+        month = month
         end_date = Date.new(year, month, -1).day
         date_array= []
         date_infos = []

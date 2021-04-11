@@ -45,6 +45,8 @@ Rails.application.routes.draw do
   
   # 店舗を有効化から外す
   put '/admin/store/deactivate/:id', to: 'stores#deactivate', as: 'store_deactivate'
+  # トレーナーの自信が提出した希望シフト
+  get '/trainer/shifts/my_requested_shift/year/:year/month/:month', to: 'trainer_management#my_requested_shift', as: 'my_requested_shift'
   
   resources :customer_weights
   # ログイン・パスワード
