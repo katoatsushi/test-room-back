@@ -1,5 +1,5 @@
 class CustomerStatusesController < ApplicationController
-  before_action :set_customer_status, only: [:show, :update, :destroy]
+  before_action :set_customer_status, only: [:show, :destroy]
 
   # GET /customer_statuses
   def index
@@ -28,10 +28,14 @@ class CustomerStatusesController < ApplicationController
   # PATCH/PUT /customer_statuses/1
   def update
     if v1_admin_signed_in?
-
       customer_id = params[:id].to_i
       customer = Customer.find(params[:id].to_i)
-      status = customer.customer_status
+      if customer.customer_status.nil?
+        status = CustomerStatus.new(customer_id: customer_id)
+      else
+        status = customer.customer_status
+      end
+
       if params["paid"] == "false"
         status.paid = false
       elsif params["paid"] == "true"
