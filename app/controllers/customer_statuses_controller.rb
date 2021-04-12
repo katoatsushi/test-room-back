@@ -28,13 +28,43 @@ class CustomerStatusesController < ApplicationController
   # PATCH/PUT /customer_statuses/1
   def update
     if v1_admin_signed_in?
-      # customer_id = params[:customer_id]
-      if @customer_status.update(customer_status_params)
-        customer = Customer.eager_load(:customer_status).eager_load(:customer_info).select("*").find_by(id: params[:id])
+
+      customer_id = params[:id].to_i
+      customer = Customer.find(params[:id].to_i)
+      status = customer.customer_status
+      if params["paid"] == "false"
+        status.paid = false
+      elsif params["paid"] == "true"
+        status.paid = true
+      end
+
+      if params["room_plus"] == "false"
+        status.room_plus = false
+      elsif params["room_plus"] == "true"
+        status.room_plus = true
+      end
+
+      status.dozen_sessions = params["dozen_sessions"]
+      if params["numbers_of_contractnt"]
+        status.numbers_of_contractnt = params["numbers_of_contractnt"]
+      elsif
+        status.numbers_of_contractnt = 0
+      end
+      error = "更新に失敗しました"
+      customer = Customer.eager_load(:customer_status).eager_load(:customer_info).select("*").find_by(id: params[:id])
+      
+      if status.save
         render json: customer
       else
-        render json: @customer_status.errors, status: :unprocessable_entity
+        render json: error
       end
+
+      # if @customer_status.update(customer_status_params)
+      #   customer = Customer.eager_load(:customer_status).eager_load(:customer_info).select("*").find_by(id: params[:id])
+      #   render json: customer
+      # else
+      #   render json: @customer_status.errors, status: :unprocessable_entity
+      # end
     end
   end
 
