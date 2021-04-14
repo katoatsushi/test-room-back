@@ -3,6 +3,7 @@ MasterAdmin.create(email: "masteradmin@gmail.com", password: "111111")
 c_a = Company.create(name: "room")
 # c_b = Company.create(name: "rise-up")
 
+
 obj = Fitness.create(name: "トレーニング", company_id: c_a.id)
 a = FitnessSecond.create(name: "胸", fitness_id: obj.id)
 menu_a = ["ベンチプレス","インクラインベンチプレス","デクラインベンチプレス",
@@ -61,6 +62,13 @@ Admin.create(email: "admin@gmail.com", password: "password", company_id: c_a.id)
 t_a = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら", email: "room-a@gmail.com", password: "aaaaaa", company_id: c_a.id)
 t_b = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら",email: "rise-up-a@gmail.com", password: "aaaaaa", company_id: c_a.id)
 t_c = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら",email: "rise-up-ba@gmail.com", password: "bbbbbb", company_id: c_a.id)
+
+t_a = Trainer.create(first_name_kanji: "古森", last_name_kanji: "洋介", first_name_kana: "ふるもり", last_name_kana: "ようすけ", email: "y-furumori@allfarm.co.jp", password: "666666", company_id: c_a.id)
+t_b = Trainer.create(first_name_kanji: "渡辺", last_name_kanji: "明", first_name_kana: "わたなべ", last_name_kana: "あきら", email: "akira0229_0717@yahoo.co.jp", password: "666666", company_id: c_a.id)
+t_c = Trainer.create(first_name_kanji: "前田", last_name_kanji: "隆之介", first_name_kana: "まえだ", last_name_kana: "りゅうのすけ",email: "1997.46-rugby.love@i.softbank.jp", password: "666666", company_id: c_a.id)
+t_d = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "かずき", first_name_kana: "たけなか", last_name_kana: "かずき",email: "kazuki1987noeru0904@gmail.com", password: "666666", company_id: c_a.id)
+t_e = Trainer.create(first_name_kanji: "アンドラダ", last_name_kanji: "パオロ", first_name_kana: "あんどらだ", last_name_kana: "ぱおろ",email: "andrada.paolo94@gmail.com", password: "666666", company_id: c_a.id)
+
 TrainerFitness.create(fitness_id: obj.id, trainer_id: t_a.id)
 TrainerFitness.create(fitness_id: obj_a.id, trainer_id: t_a.id)
 
@@ -68,6 +76,12 @@ TrainerFitness.create(fitness_id: obj.id, trainer_id: t_b.id)
 TrainerFitness.create(fitness_id: obj_b.id, trainer_id: t_b.id)
 
 TrainerFitness.create(fitness_id: obj.id, trainer_id: t_c.id)
+
+TrainerFitness.create(fitness_id: obj.id, trainer_id: t_d.id)
+TrainerFitness.create(fitness_id: obj_a.id, trainer_id: t_d.id)
+
+TrainerFitness.create(fitness_id: obj.id, trainer_id: t_e.id)
+TrainerFitness.create(fitness_id: obj_b.id, trainer_id: t_e.id)
 
 time = [
     DateTime.new(Date.today.year, Date.today.month, Date.today.day, 7, 00, 0, 0.375),
