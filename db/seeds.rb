@@ -68,6 +68,7 @@ t_b = Trainer.create(first_name_kanji: "渡辺", last_name_kanji: "明", first_n
 t_c = Trainer.create(first_name_kanji: "前田", last_name_kanji: "隆之介", first_name_kana: "まえだ", last_name_kana: "りゅうのすけ",email: "1997.46-rugby.love@i.softbank.jp", password: "666666", company_id: c_a.id)
 t_d = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "かずき", first_name_kana: "たけなか", last_name_kana: "かずき",email: "kazuki1987noeru0904@gmail.com", password: "666666", company_id: c_a.id)
 t_e = Trainer.create(first_name_kanji: "アンドラダ", last_name_kanji: "パオロ", first_name_kana: "あんどらだ", last_name_kana: "ぱおろ",email: "andrada.paolo94@gmail.com", password: "666666", company_id: c_a.id)
+t_e = Trainer.create(first_name_kanji: "土岐", last_name_kanji: "将也", first_name_kana: "とき", last_name_kana: "まさや",email: "3kpersonalfitness@gmail.com", password: "666666", company_id: c_a.id)
 
 TrainerFitness.create(fitness_id: obj.id, trainer_id: t_a.id)
 TrainerFitness.create(fitness_id: obj_a.id, trainer_id: t_a.id)
