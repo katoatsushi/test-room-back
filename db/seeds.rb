@@ -56,8 +56,8 @@ obj_b = Fitness.create(name: "整体", company_id: c_a.id)
 obj_c = Fitness.create(name: "ボクササイズ", company_id: c_a.id)
 obj_d = Fitness.create(name: "ストレッチ", company_id: c_a.id)
 
-s_a = Store.create(store_name: "代々木上原", store_address: "ああああああああああああああああああああ",number_of_rooms: 3, company_id: c_a.id)
-s_b = Store.create(store_name: "東北沢", store_address: "ああああああああああああああああああああ",number_of_rooms: 2, company_id: c_a.id)
+s_a = Store.create(store_name: "代々木上原", store_address: "東京都渋谷区元代々木町21-9 Silhouette 102",number_of_rooms: 3, company_id: c_a.id)
+s_b = Store.create(store_name: "東北沢", store_address: "東京都渋谷区上原3-18-1 Silhouette 代々木上原202",number_of_rooms: 2, company_id: c_a.id)
 
 Admin.create(email: "admin@gmail.com", password: "password", company_id: c_a.id)
 trainer_datas = [
