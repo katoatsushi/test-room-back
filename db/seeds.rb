@@ -53,36 +53,51 @@ end
 
 obj_a = Fitness.create(name: "ヨガ", company_id: c_a.id)
 obj_b = Fitness.create(name: "整体", company_id: c_a.id)
+obj_c = Fitness.create(name: "ボクササイズ", company_id: c_a.id)
+obj_d = Fitness.create(name: "ストレッチ", company_id: c_a.id)
 
 s_a = Store.create(store_name: "代々木上原", store_address: "ああああああああああああああああああああ",number_of_rooms: 3, company_id: c_a.id)
 s_b = Store.create(store_name: "東北沢", store_address: "ああああああああああああああああああああ",number_of_rooms: 2, company_id: c_a.id)
 
 Admin.create(email: "admin@gmail.com", password: "password", company_id: c_a.id)
+trainer_datas = [
+    ["佐々木","慎吾","ささき","しんご","sososoiya405@gmail.com",["トレーニング"]],
+    ["佐藤","ゆうき","さとう","ゆうき","pr_mint.you-ki@docomo.ne.jp",["トレーニング","ヨガ"]],
+    ["蛇園","将人","じゃえん","まさと","mst1210cr7bbc@icloud.com",["トレーニング","ボクササイズ"]],
+    ["土岐","将也","どき","まさや","3kpersonalfitness@gmail.com",["トレーニング"]],
+    ["谷場","夏輝","たにば","なつき","tanibanatsuki.trainer@gmail.com",["トレーニング","ボクササイズ","整体"]],
+    ["松宮","茉莉亜","まつみや","まりあ","maria.1123@i.softbank.jp",["トレーニング"]],
+    ["湯浅","健吾","ゆあさ","けんご","ykengo0937@gmail.com",["トレーニング","ストレッチ"]],
+    ["大津","滉太","おおつ","こうた","kouta.otsu@gmail.com",["トレーニング","整体"]],
+    ["藤田","莉久朗","ふじた","りくろう","hotei0706@i.softbank.jp",["トレーニング"]],
+    ["松本","快大","まつもと","よしひろ","matsumoto3127@gmail.com",["トレーニング"]],
+    ["竹中","一揮","たけなか","かずき","kazuki1987noeru0904@gmail.com",["トレーニング","整体"]],
+    ["渡辺","明","わたなべ","あきら","akira0229_0717@yahoo.co.jp",["トレーニング","ボクササイズ"]],
+    ["前田","隆之介","まえだ","りゅうのすけ","1997.46-rugby.love@i.softbank.jp",["トレーニング"]],
+    ["中桐","涼輔","なかぎ","りりょうすけ","nikukai2009@yahoo.co.jp",["トレーニング","ボクササイズ"]],
+    ["松本","健太郎","まつもと","けんたろう","matsukennoacount@gmail.com",["トレーニング"]],
+    ["大高","悠偉","おおたか","ゆうい","karaty1126@gmail.com",["トレーニング","ボクササイズ"]],
+    ["村田","修平","むらた","しゅうへい","fu1pn64@gmail.com",["トレーニング"]],
+    ["繁田","龍之介","はんだ","りゅうのすけ","tokoswimmer@i.softbank.jp",["トレーニング"]]
+]
 
-t_a = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら", email: "room-a@gmail.com", password: "aaaaaa", company_id: c_a.id)
-t_b = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら",email: "rise-up-a@gmail.com", password: "aaaaaa", company_id: c_a.id)
-t_c = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "明", first_name_kana: "たけなか", last_name_kana: "あきら",email: "rise-up-ba@gmail.com", password: "bbbbbb", company_id: c_a.id)
+trainer_datas.each do |t|
+    trainer = Trainer.create(first_name_kanji: t[0], last_name_kanji: t[1], first_name_kana: t[2], last_name_kana: t[3], email: t[4], password: "666666", company_id: c_a.id)
+    t[5].each do |m|
+        if m == "トレーニング"
+            TrainerFitness.create(fitness_id: obj.id, trainer_id: trainer.id)
+        elsif m == "ヨガ"
+            TrainerFitness.create(fitness_id: obj_a.id, trainer_id: trainer.id)
+        elsif m == "整体"
+            TrainerFitness.create(fitness_id: obj_b.id, trainer_id: trainer.id)
+        elsif m == "ボクササイズ"
+            TrainerFitness.create(fitness_id: obj_c.id, trainer_id: trainer.id)
+        elsif m == "ストレッチ"
+            TrainerFitness.create(fitness_id: obj_d.id, trainer_id: trainer.id)
+        end
+    end
+end
 
-t_a = Trainer.create(first_name_kanji: "古森", last_name_kanji: "洋介", first_name_kana: "ふるもり", last_name_kana: "ようすけ", email: "y-furumori@allfarm.co.jp", password: "666666", company_id: c_a.id)
-t_b = Trainer.create(first_name_kanji: "渡辺", last_name_kanji: "明", first_name_kana: "わたなべ", last_name_kana: "あきら", email: "akira0229_0717@yahoo.co.jp", password: "666666", company_id: c_a.id)
-t_c = Trainer.create(first_name_kanji: "前田", last_name_kanji: "隆之介", first_name_kana: "まえだ", last_name_kana: "りゅうのすけ",email: "1997.46-rugby.love@i.softbank.jp", password: "666666", company_id: c_a.id)
-t_d = Trainer.create(first_name_kanji: "竹中", last_name_kanji: "かずき", first_name_kana: "たけなか", last_name_kana: "かずき",email: "kazuki1987noeru0904@gmail.com", password: "666666", company_id: c_a.id)
-t_e = Trainer.create(first_name_kanji: "アンドラダ", last_name_kanji: "パオロ", first_name_kana: "あんどらだ", last_name_kana: "ぱおろ",email: "andrada.paolo94@gmail.com", password: "666666", company_id: c_a.id)
-t_e = Trainer.create(first_name_kanji: "土岐", last_name_kanji: "将也", first_name_kana: "とき", last_name_kana: "まさや",email: "3kpersonalfitness@gmail.com", password: "666666", company_id: c_a.id)
-
-TrainerFitness.create(fitness_id: obj.id, trainer_id: t_a.id)
-TrainerFitness.create(fitness_id: obj_a.id, trainer_id: t_a.id)
-
-TrainerFitness.create(fitness_id: obj.id, trainer_id: t_b.id)
-TrainerFitness.create(fitness_id: obj_b.id, trainer_id: t_b.id)
-
-TrainerFitness.create(fitness_id: obj.id, trainer_id: t_c.id)
-
-TrainerFitness.create(fitness_id: obj.id, trainer_id: t_d.id)
-TrainerFitness.create(fitness_id: obj_a.id, trainer_id: t_d.id)
-
-TrainerFitness.create(fitness_id: obj.id, trainer_id: t_e.id)
-TrainerFitness.create(fitness_id: obj_b.id, trainer_id: t_e.id)
 
 time = [
     DateTime.new(Date.today.year, Date.today.month, Date.today.day, 7, 00, 0, 0.375),
@@ -108,11 +123,6 @@ time = [
 tommorow_a =  DateTime.new(Date.today.year, Date.today.month, Date.today.day + 1, 7, 00, 0, 0.375)
 tommorow_b =  DateTime.new(Date.today.year, Date.today.month, Date.today.day + 1, 18, 00, 0, 0.375)
 
-# TrainerShift.create(start: time[0], finish: time[12], trainer_id: t_a.id, store_id: s_a.id)
-# TrainerShift.create(start: time[0], finish: time[12], trainer_id: t_b.id, store_id: s_a.id)
-# TrainerShift.create(start: time[0], finish: time[15], trainer_id: t_c.id, store_id: s_b.id)
-# TrainerShift.create(start: tommorow_a, finish: tommorow_b , trainer_id: t_a.id, store_id: s_a.id)
-# TrainerShift.create(start: tommorow_a, finish: tommorow_b , trainer_id: t_b.id, store_id: s_b.id)
 
 jobs = ["経営者・役員", "公務員", "金融", "コンサル", "保険", "メーカー",
     "商社", "不動産", "広告・マスコミ", "出版", "IT関連", "エンジニア", "医療","営業","主婦"]
