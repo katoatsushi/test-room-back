@@ -111,7 +111,7 @@ class TrainerManagementController < ApplicationController
         my_shifts = TrainerShift.where(trainer_id: current_v1_trainer.id)
         year = params["year"].to_i
         month = params["month"].to_i
-        binding.pry
+        # binding.pry
         
     end
 end
