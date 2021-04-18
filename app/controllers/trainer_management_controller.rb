@@ -6,7 +6,7 @@ class TrainerManagementController < ApplicationController
             # 今日以下のお客さんの予約を返す
             # today = Time.current.to_datetime
             t = Time.now
-            today  = DateTime.new(t.year, t.month, t.day + 6)
+            today  = DateTime.new(t.year, t.month, t.day + 1)
             # todayを今日の終わりにする
             response = []
             # initial_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id})
