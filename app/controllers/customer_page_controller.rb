@@ -47,6 +47,9 @@ class CustomerPageController < ApplicationController
     @appointments = []
     @apos = @customer.appointments.where(finish: false)
     @apos.each do |a|
+      
+    
+      
       start = a.appointment_time
       finish = a.appointment_time + @training_time*60
       date = [a.appointment_time.year, a.appointment_time.month, a.appointment_time.day]
@@ -62,6 +65,7 @@ class CustomerPageController < ApplicationController
       end
       @appointments << {
         id: a.id,
+        store_name: a.store_name,
         customer_id: a.customer_id,
         date: date,
         start: start,
