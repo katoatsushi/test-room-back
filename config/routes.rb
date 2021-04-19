@@ -25,7 +25,7 @@ Rails.application.routes.draw do
   get '/trainer/get/all_customers',to: 'trainer_management#all_customer', as: 'trainer_all_customer'
   
   # トレーナーの自身の評価
-  get '/trainer/get/my_evaluation',to: 'trainer_management#my_evaluation', as: 'trainer_my_evaluation'
+  get '/trainer/get/my_evaluation/:id',to: 'trainer_management#my_evaluation', as: 'trainer_my_evaluation'
   
   get '/serch/customers',to: 'admin_management#search_customer', as: 'search_customer'
   #  トレーナーのシフトを送る

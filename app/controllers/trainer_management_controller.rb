@@ -1,5 +1,5 @@
 class TrainerManagementController < ApplicationController
-    before_action :authenticate_v1_trainer!, only: [:all_customer, :my_evaluation, :my_requested_shift]
+    before_action :authenticate_v1_trainer!, only: [:all_customer, :my_requested_shift]
 
     def get_customer_records
         if v1_trainer_signed_in?
@@ -95,8 +95,9 @@ class TrainerManagementController < ApplicationController
     end
 
     def my_evaluation
+        trainer_id = params["id"].to_i
         my_data = Appointment.includes(customer_record: :evaluation)
-                                .where(customer_records: {trainer_id: current_v1_trainer.id})
+                                .where(customer_records: {trainer_id: trainer_id})
                                 .group("appointments.fitness_name").average("evaluations.trainer_score")
         response = {details: "セッションメニューごとの評価平均点", name: my_data.keys, score: my_data.values}
 

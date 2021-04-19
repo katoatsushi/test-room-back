@@ -35,8 +35,9 @@ class CustomerController < ApplicationController
         evaluation_all = []
         @records.each do |r|
           r.apo_time.min == 0 ? min = "00": min = r.apo_time.min
-          record_info = {id: r.id, customer_id: r.customer_id, trainer_id: r.trainer_id, apo_time: r.apo_time, 
-            year: r.apo_time.year.to_s, month: r.apo_time.month.to_s, day: r.apo_time.day.to_s,  hour: r.apo_time.hour.to_s,  min: min, detail: r.detail }
+          record_info = {id: r.id, customer_id: r.customer_id, trainer_id: r.trainer_id, trainer: r.trainer, apo_time: r.apo_time, 
+                        year: r.apo_time.year.to_s, month: r.apo_time.month.to_s, day: r.apo_time.day.to_s,  
+                        hour: r.apo_time.hour.to_s,  min: min, detail: r.detail }
           menues = r.customer_record_session_menus
           menues_all = []
           menues.each do |m|
