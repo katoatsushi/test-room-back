@@ -8,10 +8,13 @@ class TrainerManagementController < ApplicationController
             t = Time.now
             today  = DateTime.new(t.year, t.month, t.day + 1)
             # todayを今日の終わりにする
-            response = []
             # initial_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id})
             #                 .where(appointments: {finish: false}).where("appointment_time <= ?",today)
             initial_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id}).where("appointment_time <= ?",today)
+            initial_data_not_finish = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id}).where("appointment_time <= ?",today).where(appointments: {finish: false})
+            initial_data_finish = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id}).where("appointment_time <= ?",today).where(appointments: {finish: true})
+            initial_datas = {store: {store_name: "全ての店舗"}, all_data: initial_data, not_finish_data: initial_data_not_finish, finish_data: initial_data_finish}
+            response = [initial_datas]
             Store.where(company_id: current_v1_trainer.company_id,deactivate: false).each do |s|
                 res = {store: s}
                 #　今日より前の終了していないアポ
@@ -33,9 +36,11 @@ class TrainerManagementController < ApplicationController
                 res[:all_data] = all_data
                 response << res
             end
+            # response << initial_datas
             render json: {
                 data: response,
                 intial_data: initial_data,
+                # initial_datas: initial_datas,
                 status: 200
             }
         end
