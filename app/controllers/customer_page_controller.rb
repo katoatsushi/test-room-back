@@ -84,14 +84,22 @@ class CustomerPageController < ApplicationController
   end
 
   def my_past_records
-
-    if v1_customer_signed_in?
-      records = current_v1_customer.appointments.where(finish: true)
-      render :json => {
-        :status => 200,
-        :customer_records => records
-      }
-    end
+      if v1_customer_signed_in? || v1_trainer_signed_in? || v1_admin_signed_in?
+        customer = Customer.find(params["id"].to_i)
+        appointments = customer.appointments.where(finish: true)
+        response = []
+        appointments.each do |a|
+          customer_record = a.customer_record
+          session_menues = customer_record.customer_record_session_menus
+          trainer = customer_record.trainer
+          response <<  {apos: a, record: customer_record,menues: session_menues, trainer: trainer}
+        end
+        customer_records = customer.customer_records
+        render :json => {
+          :status => 200,
+          :response => response
+        }
+      end
   end
 
   def feedback_to_trainer

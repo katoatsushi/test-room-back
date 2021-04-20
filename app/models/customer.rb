@@ -6,6 +6,7 @@ class Customer < ActiveRecord::Base
          :recoverable, :rememberable, :validatable, :confirmable
   include DeviseTokenAuth::Concerns::User
   has_many :appointments
+  has_many :customer_records
   has_one :customer_status
   has_one :customer_info
   has_many :customer_interests
