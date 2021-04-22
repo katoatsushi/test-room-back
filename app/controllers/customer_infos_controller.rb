@@ -6,17 +6,20 @@ class CustomerInfosController < ApplicationController
     # TODO::お客様の予約残り数は今月のもの。
     customer = Customer.find(params[:id])
     # customer = Customer.left_joins(:customer_info).select("*")
+    t = Date.today
+    this_month_first = DateTime.new(t.year, t.month, 1)
     customer_status = customer.customer_status
     customer_record_count = customer.appointments.where(finish: true).count
     appo_count = customer.appointments.where(finish: false).count
-    
+    session_count = customer.appointments.where(finish: true).where("appointment_time >= ?", this_month_first).count
     customer_info = customer.customer_info
     render json: {
       customer: customer,
       customer_status: customer_status,
       customer_info: customer_info,
       customer_record_len: customer_record_count,
-      appo_count: appo_count
+      appo_count: appo_count,
+      session_count: session_count
     }
   end
   # GET /customer_infos
