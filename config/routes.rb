@@ -5,8 +5,10 @@ Rails.application.routes.draw do
   resources :evaluations
   resources :customer_record_session_menus
   resources :customer_records
-  # トレーナーのシフト作成
-  post '/trainer/shift/create/year/:year/month/:month', to: 'trainer_shifts#create', as: 'trainer_shifts_create'
+  # # トレーナーのシフト作成
+  # post '/trainer/shift/create/year/:year/month/:month', to: 'trainer_shifts#create', as: 'trainer_shifts_create'
+  # トレーナーのシフト更新
+  put '/trainer/shift/create/year/:year/month/:month', to: 'trainer_shifts#update', as: 'trainer_shifts_update'
 
   put '/customer/update_avatar/:id', to: 'customer_infos#update_avatar', as: 'update_customer_avatar'
   get '/return_customer_all_info/:id', to: 'customer_infos#return_customer_all_info', as: 'return_customer_all_info'

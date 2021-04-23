@@ -4,12 +4,9 @@ class TrainerManagementController < ApplicationController
     def get_customer_records
         if v1_trainer_signed_in?
             # 今日以下のお客さんの予約を返す
-            # today = Time.current.to_datetime
             t = Time.now
             today  = DateTime.new(t.year, t.month, t.day + 1)
             # todayを今日の終わりにする
-            # initial_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id})
-            #                 .where(appointments: {finish: false}).where("appointment_time <= ?",today)
             initial_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id}).where("appointment_time <= ?",today)
             initial_data_not_finish = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id}).where("appointment_time <= ?",today).where(appointments: {finish: false})
             initial_data_finish = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id}).where("appointment_time <= ?",today).where(appointments: {finish: true})
@@ -40,7 +37,6 @@ class TrainerManagementController < ApplicationController
             render json: {
                 data: response,
                 intial_data: initial_data,
-                # initial_datas: initial_datas,
                 status: 200
             }
         end
@@ -114,11 +110,29 @@ class TrainerManagementController < ApplicationController
 
     def my_requested_shift
         # TODO トレーナーの既存のシフトを返す
-        my_shifts = TrainerShift.where(trainer_id: current_v1_trainer.id)
         year = params["year"].to_i
         month = params["month"].to_i
-        # binding.pry
-        
+        start_of_month = DateTime.new(year, month, 1, 0, 00, 0, 0.375)
+        end_of_month = DateTime.new(year, month, -1, 23, 59, 0, 0.375)
+        days = [*start_of_month.day..end_of_month.day]
+        response = []
+        work_day = []
+        days.each do |d|
+            shift = TrainerShift.where(trainer_id: current_v1_trainer.id).where("? <= start AND finish <= ? ", DateTime.new(year, month, d, 0, 00, 0, 0.375), DateTime.new(year, month, d, 23, 59, 0, 0.375))
+            if shift.length != 0
+                shift = shift[0]
+                work_day << d
+            else
+                shift = nil
+            end
+            response << shift
+        end
+        my_shifts = TrainerShift.where(trainer_id: current_v1_trainer.id).where("? <= start AND finish <= ? ", start_of_month, end_of_month)
+        render json: {
+            data: response,
+            work_day: work_day,
+            status: 200
+        }
     end
 end
 

@@ -11,6 +11,7 @@ class CustomerInfosController < ApplicationController
     customer_status = customer.customer_status
     customer_record_count = customer.appointments.where(finish: true).count
     appo_count = customer.appointments.where(finish: false).count
+    # 今月のすでに予約したカウント数
     session_count = customer.appointments.where(finish: true).where("appointment_time >= ?", this_month_first).count
     customer_info = customer.customer_info
     render json: {
