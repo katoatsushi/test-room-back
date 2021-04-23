@@ -1,5 +1,5 @@
 class AdminManagementController < ApplicationController
-    before_action :authenticate_v1_admin!, only: [:all_customer]
+    before_action :authenticate_v1_admin!, only: [:all_customer,:all_trainer]
   
     require 'date'
 
@@ -145,6 +145,14 @@ class AdminManagementController < ApplicationController
 
 
     def search_customer
+    end
+    def all_trainer
+        company_id = current_v1_admin.company_id
+        trainers = Trainer.where(company_id: company_id)
+        render json: {
+            trainers: trainers,
+            status: 200
+        }
     end
 
 end

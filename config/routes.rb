@@ -34,7 +34,8 @@ Rails.application.routes.draw do
   get '/get_trainer_shifts',to: 'admin_management#get_trainer_shifts', as: 'get_trainer_shifts'
   # トレーナーのシフトを更新する
   put '/update_trainer_shift',to: 'admin_management#update_trainer_shift', as: 'update_trainer_shift'
-
+  # 全てのトレーナーを取得
+  get '/admin/get/trainer_all', to: 'admin_management#all_trainer', as: 'admin_management_all_trainer'
   get '/check_evaluation/:customer_id', to: 'admin_management#check_evaluation', as: 'check_evaluation'
   # トレーナーのプロフィール画像を変更
   put '/trainer/update_avatar', to: 'trainer_infos#update_avatar', as: 'trainer_update_avatar'
@@ -44,7 +45,6 @@ Rails.application.routes.draw do
   get '/show/record/:id', to: 'trainer_management#check_finished_record', as: 'check_finished_record'
   # 発行済みのレコードの削除
   delete '/delete/record/:appointment_id', to: 'trainer_management#record_delete', as: 'record_delete'
-  
   # 店舗を有効化から外す
   put '/admin/store/deactivate/:id', to: 'stores#deactivate', as: 'store_deactivate'
   # トレーナーの自信が提出した希望シフト
@@ -54,7 +54,6 @@ Rails.application.routes.draw do
   # ログイン・パスワード
   namespace :v1 do
     # マスタアカウント
-
     mount_devise_token_auth_for "MasterAdmin", at: "master_admin_auth", controllers: {
       passwords: 'v1/auth/master_admins/passwords',
       sessions: 'v1/auth/master_admins/sessions'
@@ -138,12 +137,6 @@ Rails.application.routes.draw do
   post '/create/record/session_menues/appointment/:appointment_id', to: 'customer_record_session_menus#create_record_and_menues', as: 'create_record_and_menues'
   # お客さんは自分で予約を行う場合
   get '/calendar', to: 'calendar#select_store_fitness', as: 'calendar'
-
-  # get '/calendar/:store_id/:customer_menu_id/:year/:month', to: 'calendar#index', as: 'calendar_change'
-  # get '/appointments/new/:store_id/:customer_menu_id/:year/:month/:day', to: 'appointments#new', as: 'new_appointment'
-  # # 空き状況
-  # get '/appointments/vacancy/:company_id/:customer_menu_id/:year/:month/:day', to: 'appointments#vacancy', as: 'vacancy_appointment'
-  # post '/customer/:customer_id/appointments/new/:store_id/:customer_menu_id/:year/:month/:day', to: 'appointments#create', as: 'create_appointment'
   
   get '/calendar/:store_id/:fitness_id/:year/:month', to: 'calendar#index', as: 'calendar_change'
   get '/appointments/new/:store_id/:fitness_id/:year/:month/:day', to: 'appointments#new', as: 'new_appointment'
