@@ -46,9 +46,9 @@ class HomeController < ApplicationController
     # @black_schedules = BlackSchedule.where(company_id: params[:company_id])
     index_params
     @this_days_times = make_time_schedule_in_one_day(params[:year].to_i, params[:month].to_i, params[:day].to_i)
-  
     @today_schedules = []
     @store_array = []
+    # company_id = current_v1_trainer.comapny_id || current_v1_admin.comapny_id
     Store.where(company_id: params[:company_id],deactivate: false).each do |s|
       @store_array << s
       schedules_array = []
@@ -70,7 +70,14 @@ class HomeController < ApplicationController
                           .or(BlackSchedule.where('not_free_time_start <= ?', datetime_start).where('? <= not_free_time_finish', datetime_fin))
                           .eager_load(:trial_session).select("*").to_a
         
-        customer_appointments = Customer.where(company_id: params[:company_id]).joins(:appointments).joins(:customer_info).select("customers.*, appointments.*, customer_infos.*").where(appointments: { appointment_time: t[0], store_id: s.id }).to_a
+        # customer_appointments = Customer.where(company_id: params[:company_id]).joins(:appointments).joins(:customer_info)
+        #                         .select("customers.*, appointments.*, customer_infos.*")
+        #                         .where(appointments: { appointment_time: t[0], store_id: s.id }).to_a
+
+        customer_appointments = Customer.joins(:appointments).select("*").where(customers: {company_id: params[:company_id]})
+                                .where(appointments: { appointment_time: t[0], store_id: s.id }).to_a
+                                # .where(appointments: {store_id: s.id})
+                                # .where("appointments.appointment_time == ?",today).to_a
         schedule_infos = black_schedules.append(customer_appointments).flatten
         schedules_array << [time, schedule_infos]
       end
