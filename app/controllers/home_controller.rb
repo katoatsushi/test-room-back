@@ -42,10 +42,92 @@ class HomeController < ApplicationController
     render json: @all_company
   end
 
+  def puts_data(ary, data)
+    ary_counter = 0
+    ary.each do |a|
+      if a.nil?
+        ary[ary_counter] = data
+        break
+      end # if(a.nil?)
+      ary_counter = ary_counter + 1
+    end # ary.each
+    return ary
+  end
+
+  def date_schedule
+    index_params
+    @this_days_times = admin_make_time_schedule(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+    @stores = Store.where(company_id: params[:company_id], deactivate: false)
+    @scedules = []
+    Store.where(company_id: params[:company_id], deactivate: false).each do |s|
+      all_array = []
+      time_counter = 0
+      @this_days_times.each do |t|
+        ary = Array.new(s.number_of_rooms + 1)
+        datetime_start = t[0].to_datetime
+        datetime_fin = t[1].to_datetime
+        ary[0] = [datetime_start,datetime_fin]
+
+        black_schedules = BlackSchedule.where('? <= not_free_time_start', datetime_start).where('not_free_time_start < ?', datetime_fin)
+                          .or(BlackSchedule.where('? < not_free_time_finish', datetime_start).where('not_free_time_finish <= ?', datetime_fin))
+                          .or(BlackSchedule.where('not_free_time_start <= ?', datetime_start).where('? <= not_free_time_finish', datetime_fin))
+                          .where(company_id: params[:company_id], store_id: s.id)
+                          .eager_load(:trial_session).select("*").to_a
+        
+        black_schedules.each do |black|
+          pre = false
+          if(time_counter!=0)
+            pre_array_counter = 0
+            all_array[time_counter-1].each do |pre_array|
+              if(pre_array.class != Array && !pre_array.nil?)
+                if(black.id==pre_array.id)
+                  if(ary[pre_array_counter].nil?)
+                    ary[pre_array_counter] = black
+                  else
+                    # 先客をどかさないといけない
+                    obj_stash = ary[pre_array_counter]
+                    ary[pre_array_counter] = black
+                    # 先客を他の空きに移動
+                    ary = puts_data(ary, obj_stash)
+                  end
+                  pre = true
+                  break
+                end # if(black.id==pre_array.id)
+              end
+              pre_array_counter = pre_array_counter + 1
+            end # all_array[time_counter-1].each
+          end # if(time_counter!=0)
+
+          unless pre
+            ary = puts_data(ary, black)
+          end # unless pre
+        end # black_schedules.each do |black|
+
+        time_counter = time_counter + 1
+
+        customer_appointments = Customer.joins(:appointments).select("*").where(customers: {company_id: params[:company_id]})
+        .where(appointments: { appointment_time: t[0], store_id: s.id }).to_a
+        customer_appointments.each do |apo|
+
+          ary = puts_data(ary, apo)
+
+        end # customer_appointments.each do |c|
+        all_array.append(ary)
+      end # @this_days_times.each do |t|
+      info = {name: s.store_name, data: all_array}
+      # binding.pry
+      @scedules << info
+    end # Store.where
+    render json: {schedules: @scedules, stores: @stores }
+  end
+
+
+
+
   def today
     # @black_schedules = BlackSchedule.where(company_id: params[:company_id])
     index_params
-    @this_days_times = make_time_schedule_in_one_day(params[:year].to_i, params[:month].to_i, params[:day].to_i)
+    @this_days_times = admin_make_time_schedule(params[:year].to_i, params[:month].to_i, params[:day].to_i)
     @today_schedules = []
     @store_array = []
     # company_id = current_v1_trainer.comapny_id || current_v1_admin.comapny_id
@@ -64,12 +146,20 @@ class HomeController < ApplicationController
         time = [start, fin]
         datetime_start = t[0].to_datetime
         datetime_fin = t[1].to_datetime
+        
+        # black_schedules = BlackSchedule.where(company_id: params[:company_id], store_id: s.id)
+        #                   .where(not_free_time_start: datetime_start..datetime_fin)
+        #                   .where('? <= not_free_time_start', datetime_start).where('not_free_time_finish < ?', datetime_fin)
+        #                   .or(BlackSchedule.where(not_free_time_finish: datetime_start..datetime_fin))
+        #                   .or(BlackSchedule.where('not_free_time_start <= ?', datetime_start).where('? <= not_free_time_finish', datetime_fin))
+        #                   .eager_load(:trial_session).select("*").to_a
+
         black_schedules = BlackSchedule.where(company_id: params[:company_id], store_id: s.id)
-                          .where(not_free_time_start: datetime_start..datetime_fin)
-                          .or(BlackSchedule.where(not_free_time_finish: datetime_start..datetime_fin))
+                          .where('? <= not_free_time_start', datetime_start).where('not_free_time_start < ?', datetime_fin)
+                          .or(BlackSchedule.where('? < not_free_time_finish', datetime_start).where('not_free_time_finish <= ?', datetime_fin))
                           .or(BlackSchedule.where('not_free_time_start <= ?', datetime_start).where('? <= not_free_time_finish', datetime_fin))
                           .eager_load(:trial_session).select("*").to_a
-        
+
         # customer_appointments = Customer.where(company_id: params[:company_id]).joins(:appointments).joins(:customer_info)
         #                         .select("customers.*, appointments.*, customer_infos.*")
         #                         .where(appointments: { appointment_time: t[0], store_id: s.id }).to_a
@@ -99,7 +189,7 @@ class HomeController < ApplicationController
     year = params[:year].to_i
     month = params[:month].to_i
     day = params[:day].to_i
-    @this_days_times = make_time_schedule_in_one_day(year, month, day)
+    @this_days_times = admin_make_time_schedule(year, month, day)
     @this_day = Date.new(year, month, day)
     @pre_day = @this_day - 1.day
     @tomorrow = @this_day + 1.day

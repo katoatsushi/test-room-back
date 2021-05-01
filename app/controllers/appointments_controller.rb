@@ -59,10 +59,12 @@ class AppointmentsController < ApplicationController
           trainers_fitness_menu_ids << fitnesses_ids
         end
       end
+      
       # 部屋の可能使用数 = 部屋数-管理者のスケジュール数
       available_room_num = store.number_of_rooms - admins_reserved_count
-      # トレーナのシフトの
+      # トレーナのシフトの数
       trainers_fitness_menu_len = trainers_fitness_menu_ids.length
+      # 使用可能の部屋数より、シフト数が多い場合[シフト数=使用可能の部屋数]とする
       trainers_fitness_menu_len > available_room_num ? trainers_fitness_menu_len = available_room_num : trainers_fitness_menu_len
 
       if (reserved_datas.length != 0 )
@@ -87,31 +89,6 @@ class AppointmentsController < ApplicationController
         
       end
 
-      # free = trainers_fitness_menu_len
-      # number_of_seats = 0
-      # reserved = 0
-      # trainers.each do |trainer|
-      #   ok = false
-      #   # 要望のセッションメニューが当トレーナのできるセッションメニューに含まれているかのok
-      #   trainer.fitnesses.each do |f|
-      #     f.id == fitness.id ? ok = true : ok = false
-      #   end
-      #   if ok
-      #     # 顧客様の希望店舗=トレーナーの指定日のシフトの店舗かつ希望セッションを行うことができる場合カウント
-      #     number_of_seats +=  trainer.trainer_shifts.where("start <= ? AND  ? <= finish", t[0], t[1]).where(store_id:  store.id).count
-      #   end
-      # end
-      # #　トレーナーの人数が部屋数を超えていた場合、部屋数を予約可能枠数とする
-      # number_of_seats > store.number_of_rooms ? number_of_seats = store.number_of_rooms : number_of_seats
-      # number_of_reserved = Appointment.where(store_id: store.id, fitness_id: fitness.id)
-      #                                 .where(appointment_time: t[0]).count
-      # number_of_admins = BlackSchedule.where(store_id: store.id)
-      #   .merge((BlackSchedule.where("? < not_free_time_start AND not_free_time_start < ?", t[0], t[1])
-      #     .or(BlackSchedule.where("? < not_free_time_finish AND not_free_time_finish < ?", t[0], t[1])))
-      #     .or(BlackSchedule.where("not_free_time_start <= ? AND ? <= not_free_time_finish ", t[0], t[1]))).count
-      # free = number_of_seats - number_of_reserved - number_of_admins
-      # #　空き状況が0未満の際は0とする
-      # free < 0  ? free = 0 : free
       t[0].min == 0 ? start_min = "00" : start_min = t[0].min.to_s
       t[1].min == 0 ? finish_min = "00" : finish_min = t[1].min.to_s
       start_time = [t[0].hour.to_s, start_min]

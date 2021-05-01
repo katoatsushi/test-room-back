@@ -153,5 +153,7 @@ Rails.application.routes.draw do
   
   # 管理者のページ
   get '/admin/company_id/:company_id/year/:year/month/:month/day/:day', to: 'home#today', as: 'admin_today'
+  get '/admin/date_schedule/company_id/:company_id/year/:year/month/:month/day/:day', to: 'home#date_schedule', as: 'admin_date_schedule'
+  
   # get '/admin/company_id/:company_id/year/:year/month/:month', to: 'home#oneday', as: 'admin_oneday'
 end

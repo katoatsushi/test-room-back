@@ -4,8 +4,10 @@ class TrainerManagementController < ApplicationController
     def get_customer_records
         if v1_trainer_signed_in?
             # 今日以下のお客さんの予約を返す
-            t = Time.now
-            today  = DateTime.new(t.year, t.month, t.day + 1)
+            # t = Time.now
+            # today  = DateTime.new(t.year, t.month, t.day + 1)
+            now = Time.current
+            today  = DateTime.new(now.tomorrow.year, now.tomorrow.month, now.tomorrow.day)
             # todayを今日の終わりにする
             initial_data = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id}).where("appointment_time <= ?",today)
             initial_data_not_finish = Customer.joins(:appointments).select("*").where(customers: {company_id: current_v1_trainer.company_id}).where("appointment_time <= ?",today).where(appointments: {finish: false})
