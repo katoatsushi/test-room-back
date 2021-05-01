@@ -99,6 +99,11 @@ class CustomerPageController < ApplicationController
           :status => 200,
           :response => response
         }
+      else
+        render :json => {
+          :status => 403,
+          :response => nil
+        }
       end
   end
 

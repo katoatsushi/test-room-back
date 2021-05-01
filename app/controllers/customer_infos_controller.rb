@@ -8,12 +8,7 @@ class CustomerInfosController < ApplicationController
     # customer = Customer.left_joins(:customer_info).select("*")
     t = Date.today
     this_month_first = DateTime.new(t.year, t.month, 1)
-    
-    # binding.pry
-    
     customer_status = customer.customer_status
-    customer_record_count = customer.appointments.where(finish: true).count
-    appo_count = customer.appointments.where(finish: false).count
     # 今月のすでに予約したカウント数
     session_count = customer.appointments.where(finish: true).where("appointments.appointment_time >= ?", this_month_first).count
     appointment_count = customer.appointments.where(finish: false).where("appointments.appointment_time >= ?", this_month_first).count
@@ -22,8 +17,6 @@ class CustomerInfosController < ApplicationController
       customer: customer,
       customer_status: customer_status,
       customer_info: customer_info,
-      customer_record_len: customer_record_count,
-      appo_count: appo_count,
       session_count: session_count,
       appointment_count: appointment_count
     }
