@@ -139,7 +139,7 @@ Rails.application.routes.draw do
   get '/calendar', to: 'calendar#select_store_fitness', as: 'calendar'
   
   get '/calendar/:store_id/:fitness_id/:year/:month', to: 'calendar#index', as: 'calendar_change'
-  get '/appointments/new/:store_id/:fitness_id/:year/:month/:day', to: 'appointments#new', as: 'new_appointment'
+  get '/appointments/new/customer/:customer_id/:store_id/:fitness_id/:year/:month/:day', to: 'appointments#new', as: 'new_appointment'
   # 空き状況
   get '/appointments/vacancy/:company_id/:fitness_id/:year/:month/:day', to: 'appointments#vacancy', as: 'vacancy_appointment'
   post '/customer/:customer_id/appointments/new/:store_id/:fitness_id/:year/:month/:day', to: 'appointments#create', as: 'create_appointment'

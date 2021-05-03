@@ -1,6 +1,7 @@
 class AppointmentsController < ApplicationController
   before_action :set_appointment, only: [:show, :update, :destroy]
   before_action :authenticate_v1_customer!, only: [:destroy]
+  
   def vacancy
     times = make_time_schedule_in_one_day(params[:year], params[:month], params[:day])
     response = []
@@ -30,125 +31,149 @@ class AppointmentsController < ApplicationController
     }
   end
 
+  # def guidelines_of_new_function
+  #   # 1 使える部屋数を決定
+  #   if(部屋数 > 今回のメニューのシフト数)
+  #     部屋数 = 今回のメニューのシフト数
+  #   end
+  #   部屋数 = 部屋数 - 管理者のスケジュール数 - お客様既存予約数
+  #   # 2 対応可能なトレーナー数を計算±
+  #   # 3 1と2の少ない方が予約可能数とする
+  #   if(対応可能トレーナー数 > 部屋数)
+  #     対応可能トレーナー数 = 部屋数
+  #   end
+  #   予約可能数 = 対応可能トレーナー数
+  # end
+
+  def check_available_seat(t, store, trainers, params_fitness, customer)
+    # 部屋数
+    store_num = store.number_of_rooms
+    # シフト数
+    this_store_trainer_shifts = TrainerShift.where(store_id: store.id).where("start < ? AND ? < finish", t[0],  t[1]).all
+    # 管理者のスケジュール
+    admins_reserved = BlackSchedule.where(store_id: store.id).merge((BlackSchedule.where("? < not_free_time_start AND not_free_time_start < ?", t[0], t[1]).or(BlackSchedule.where("? < not_free_time_finish AND not_free_time_finish < ?", t[0], t[1]))).or(BlackSchedule.where("not_free_time_start <= ? AND ? <= not_free_time_finish ", t[0], t[1])))
+    # 全てのお客様の予約
+    reserved = Appointment.where(store_id: store.id).where(appointment_time: t[0])
+    #　おんなじ時間に予約できないようにする
+    this_customer_apo = Appointment.where(customer_id: customer.id).where(appointment_time: t[0])
+    if(this_customer_apo.length!=0)
+      return 0
+    end
+
+    available_menues = []
+    session_num = 0
+    this_store_trainer_shifts.each do |shift|
+      # セッションメニューを配列で持つ
+      available_menues.append(shift.trainer.fitnesses)
+      if shift.trainer.fitnesses.ids.include?(params_fitness.id)
+        session_num = session_num + 1
+      end
+    end
+
+    available_menues_array = available_menues.sort_by { |x| x.length }
+    reserved.each do |r|
+      roop_counter = 0
+      available_menues_array.each do |menues|
+        if menues.ids.include?(r.fitness_id)
+          available_menues_array.delete_at(roop_counter)
+          break
+        end
+        roop_counter = roop_counter + 1
+      end
+    end
+    # 希望メニューに対する、現在稼働可能なトレーナーの人数
+    reservation_available = 0
+    available_menues_array.each do |menues|
+      if menues.ids.include?(params_fitness.id)
+        reservation_available = reservation_available + 1
+      end
+    end
+    # 空いている部屋数と可能なトレーナー数の少ない方が予約可能数
+    reservation_available = [store_num - admins_reserved.count - reserved.count, reservation_available].min
+    return reservation_available
+  end
+
   def new  
     times = make_time_schedule_in_one_day(params[:year], params[:month], params[:day])
     fitness = Fitness.find(params["fitness_id"].to_i)
     store = Store.find(params["store_id"].to_i)
     response = []
     trainers = Trainer.where(company_id: fitness.company_id)
+    customer = Customer.find(params[:customer_id])
 
     times.each do |t|
-      # 整体が予約されて、存在するトレーナーが[整体、トレーニング]をできる場合、このトレーナーの枠を使ってしまっているので新規顧客は予約をできない
-      # 管理者のスケジュールを探す
-      admins_reserved_count = BlackSchedule.where(store_id: store.id)
-      .merge((BlackSchedule.where("? < not_free_time_start AND not_free_time_start < ?", t[0], t[1])
-        .or(BlackSchedule.where("? < not_free_time_finish AND not_free_time_finish < ?", t[0], t[1])))
-        .or(BlackSchedule.where("not_free_time_start <= ? AND ? <= not_free_time_finish ", t[0], t[1]))).count
-       # トレーナーで今回のメニュー兼過去の予約のメニューを持っている者を抽出
-      reserved_datas = Appointment.where(store_id: store.id).where(appointment_time: t[0])
-      trainers_fitness_menu_ids = []
-      reserved_menu_id = []
-      trainers.each do |this_trainer|
-        count = this_trainer.trainer_shifts.where("start <= ? AND ? <= finish", t[0], t[1]).where(store_id: store.id).count
-        if count >= 1
-          fitnesses_ids = []
-          this_trainer.fitnesses.each do |f|
-            fitnesses_ids << f.id
-          end
-          # 本時間に勤務予定のトレーナーの扱えるメニューを配列で取り込む
-          trainers_fitness_menu_ids << fitnesses_ids
-        end
-      end
-      
-      # 部屋の可能使用数 = 部屋数-管理者のスケジュール数
-      available_room_num = store.number_of_rooms - admins_reserved_count
-      # トレーナのシフトの数
-      trainers_fitness_menu_len = trainers_fitness_menu_ids.length
-      # 使用可能の部屋数より、シフト数が多い場合[シフト数=使用可能の部屋数]とする
-      trainers_fitness_menu_len > available_room_num ? trainers_fitness_menu_len = available_room_num : trainers_fitness_menu_len
-
-      if (reserved_datas.length != 0 )
-        # すでに予約がある場合
-        reserved_datas.each do |rdata|
-          counter = 0
-          trainers_fitness_menu_ids.each do |menu_ids|
-            if(fitness.id != rdata.fitness_id)
-              if (menu_ids.include?(rdata.fitness_id) && menu_ids.include?(fitness.id))
-                trainers_fitness_menu_ids.delete_at(counter)
-                trainers_fitness_menu_len = trainers_fitness_menu_len - 1
-                break 
-              end
-            else
-              trainers_fitness_menu_ids.delete_at(counter)
-              trainers_fitness_menu_len = trainers_fitness_menu_len - 1
-              break 
-            end
-            counter = counter + 1
-          end
-        end
-        
-      end
-
+      available_num = check_available_seat(t, store, trainers, fitness, customer)
       t[0].min == 0 ? start_min = "00" : start_min = t[0].min.to_s
       t[1].min == 0 ? finish_min = "00" : finish_min = t[1].min.to_s
       start_time = [t[0].hour.to_s, start_min]
       finish_time = [t[1].hour.to_s, finish_min]
-      response << [t, trainers_fitness_menu_len, [start_time , finish_time]]
+      response << [t, available_num, [start_time , finish_time]]
     end
 
     render json: response
   end
 
-  def create    
+  def create
     @appointment = Appointment.new(appointment_params)
-    store_id = params[:store_id].to_i
-    fitness_id = params[:fitness_id].to_i
+    store = Store.find(params[:store_id].to_i)
+    fitness = Fitness.find(params[:fitness_id].to_i)
+    trainers = Trainer.where(company_id: params[:customer_id])
+    # appointment_time = Time.new(params["year"].to_i,params["month"].to_i, params["day"].to_i, params["hour"], params["min"], 0,'+09:00')
+    # タイムゾーンを指定
+    appointment_time = Time.new(params["year"].to_i,params["month"].to_i, params["day"].to_i, params["hour"], params["min"], 0,'+09:00')
+    
+    # 現在予約できるか確認
+    t = [appointment_time, appointment_time + @training_time*60]
+    available = check_available_seat(t, store, trainers, fitness)
+    # 予約可能数がなければリターン
     customer = Customer.find(params[:customer_id])
     # 予約可能上限数
     customer_apos_max_num = customer.customer_status.numbers_of_contractnt
-    # 予約をしようとした月の予約上限数
     this_month_start = DateTime.new(params["year"].to_i,params["month"].to_i, 1, 0, 0, 0, 0.375)
     this_month_end = DateTime.new(params["year"].to_i,params["month"].to_i, -1, 0, 0, 0, 0.375)
+    # 今月の総予約数
     apos_count = Appointment.where("? <= appointment_time AND appointment_time <= ? ", this_month_start, this_month_end)
                             .where(customer_id: customer.id).count
 
-    # 1月の予約可能上限数を超えていないか    
-    if apos_count >= customer_apos_max_num
-      # render json: "今月の予約可能上限数を超えております"
-      render :json => {
-        :error => true, 
-        :message => "今月の予約可能上限数を超えております"
-      }
-    else
+    if(customer_apos_max_num < apos_count)
+      message = "今月の予約上限を超えています。"
+    end
+    if(available <= 0)
+      message = "空き予約が埋まってしまったため、予約に失敗してしまいました"
+    end
+    # 1月の予約可能上限数を超えていないか
+    if ((customer_apos_max_num > apos_count) && (available > 0))
       appointment_time = DateTime.new(params["year"].to_i,params["month"].to_i, params["day"].to_i, params["hour"], params["min"], 0, 0.375)
-      @appointment.store_id = store_id
-      @appointment.store_name = Store.find(store_id).store_name
-      @appointment.fitness_id = fitness_id
-      @appointment.fitness_name = Fitness.find(fitness_id).name
+      @appointment.store_id = store.id
+      @appointment.store_name = store.store_name
+      @appointment.fitness_id = fitness.id
+      @appointment.fitness_name = fitness.name
       @appointment.customer_id = params[:customer_id]
       @appointment.appointment_time = appointment_time
       
       if !@appointment.customer_id.nil?
         if @appointment.save
-          # render json: @appointment
           render :json => {
             :error => false, 
             :data => @appointment
           }
         else
-          # render json: @appointment.errors
           render :json => {
             :error => false, 
             :data => @appointment.errors
           }
         end
       else
-        # render json: 'error occured customer_id is nil, please cheack your header'
         render :json => {
           :error => true, 
           :message => 'error occured customer_id is nil, please cheack your header'
         }
       end
+    else
+      render :json => {
+        :error => true, 
+        :message => message
+      }
     end
   end
 
