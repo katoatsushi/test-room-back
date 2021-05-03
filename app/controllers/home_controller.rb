@@ -72,9 +72,13 @@ class HomeController < ApplicationController
                           .or(BlackSchedule.where('? < not_free_time_finish', datetime_start).where('not_free_time_finish <= ?', datetime_fin))
                           .or(BlackSchedule.where('not_free_time_start <= ?', datetime_start).where('? <= not_free_time_finish', datetime_fin))
                           .where(company_id: params[:company_id], store_id: s.id)
-                          .eager_load(:trial_session).select("*").to_a
+                          .joins(:trial_session).select("*").to_a
         
         black_schedules.each do |black|
+          if(black.trial_session)
+            # binding.pry
+          end
+          
           pre = false
           if(time_counter!=0)
             pre_array_counter = 0
