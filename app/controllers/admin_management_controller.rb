@@ -68,6 +68,9 @@ class AdminManagementController < ApplicationController
 
     def update_trainer_shift
         datas = params["data"]
+        
+        # binding.pry
+        
         datas.each do |d|
             if d["shifts"]["id"]
                 # 変更の場合
@@ -90,6 +93,9 @@ class AdminManagementController < ApplicationController
                 new_shift.save
             end
         end
+        
+        # binding.pry
+        
         if params["delete"].length > 0
             params["delete"].each do |d|
                 TrainerShift.find(d).delete

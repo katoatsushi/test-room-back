@@ -77,10 +77,11 @@ class AppointmentsController < ApplicationController
         part_time_jobs.append(shift.trainer.fitnesses)
       end
     end
+    
+    # シフトを扱えるメニュー数ごとにソート
     full_time_have = full_time_have.sort_by { |x| x.length }
     full_time_not_have = full_time_not_have.sort_by { |x| x.length }
 
-    # シフトを扱えるメニュー数ごとにソート
     # 体験のお客様ためトレーナーが入りシフトが削除
     admins_reserved.each do |admin|
       admin_roop_counter = 0
@@ -149,15 +150,16 @@ class AppointmentsController < ApplicationController
     store = Store.find(params[:store_id].to_i)
     fitness = Fitness.find(params[:fitness_id].to_i)
     trainers = Trainer.where(company_id: params[:customer_id])
+    customer = Customer.find(params[:customer_id])
     # appointment_time = Time.new(params["year"].to_i,params["month"].to_i, params["day"].to_i, params["hour"], params["min"], 0,'+09:00')
     # タイムゾーンを指定
     appointment_time = Time.new(params["year"].to_i,params["month"].to_i, params["day"].to_i, params["hour"], params["min"], 0,'+09:00')
     
     # 現在予約できるか確認
     t = [appointment_time, appointment_time + @training_time*60]
-    available = check_available_seat(t, store, trainers, fitness)
+    
     # 予約可能数がなければリターン
-    customer = Customer.find(params[:customer_id])
+    available = check_available_seat(t, store, trainers, fitness, customer)
     # 予約可能上限数
     customer_apos_max_num = customer.customer_status.numbers_of_contractnt
     this_month_start = DateTime.new(params["year"].to_i,params["month"].to_i, 1, 0, 0, 0, 0.375)
