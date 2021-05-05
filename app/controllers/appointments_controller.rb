@@ -44,8 +44,23 @@ class AppointmentsController < ApplicationController
   #   end
   #   予約可能数 = 対応可能トレーナー数
   # end
+  def check_only_vacancy(t, store)
+    # 部屋数
+    store_num = store.number_of_rooms
+    # シフト数
+    this_store_trainer_shifts = TrainerShift.where(store_id: store.id).where("start < ? AND ? < finish", t[0],  t[1])
+    # 管理者のスケジュール
+    admins_reserved = BlackSchedule.where(store_id: store.id).merge((BlackSchedule.where("? < not_free_time_start AND not_free_time_start < ?", t[0], t[1]).or(BlackSchedule.where("? < not_free_time_finish AND not_free_time_finish < ?", t[0], t[1]))).or(BlackSchedule.where("not_free_time_start <= ? AND ? <= not_free_time_finish ", t[0], t[1])))
+    # 全てのお客様の予約
+    reserved = Appointment.where(store_id: store.id).where(appointment_time: t[0])
 
-  def check_available_seat(t, store, trainers, params_fitness, customer)
+    vacancy = [store_num ,this_store_trainer_shifts.length ].min
+    vacancy = vacancy - reserved.length - admins_reserved.length
+    
+    return [t, vacancy]
+  end
+
+  def check_available_seat(t, store, params_fitness, customer)
     # 部屋数
     store_num = store.number_of_rooms
     # シフト数
@@ -130,11 +145,12 @@ class AppointmentsController < ApplicationController
     fitness = Fitness.find(params["fitness_id"].to_i)
     store = Store.find(params["store_id"].to_i)
     response = []
-    trainers = Trainer.where(company_id: fitness.company_id)
+    # trainers = Trainer.where(company_id: fitness.company_id)
     customer = Customer.find(params[:customer_id])
     
     times.each do |t|
-      available_num = check_available_seat(t, store, trainers, fitness, customer)
+      # available_num = check_available_seat(t, store, trainers, fitness, customer)
+      available_num = check_available_seat(t, store,  fitness, customer)
       t[0].min == 0 ? start_min = "00" : start_min = t[0].min.to_s
       t[1].min == 0 ? finish_min = "00" : finish_min = t[1].min.to_s
       start_time = [t[0].hour.to_s, start_min]
@@ -149,17 +165,16 @@ class AppointmentsController < ApplicationController
     @appointment = Appointment.new(appointment_params)
     store = Store.find(params[:store_id].to_i)
     fitness = Fitness.find(params[:fitness_id].to_i)
-    trainers = Trainer.where(company_id: params[:customer_id])
+    # trainers = Trainer.where(company_id: params[:customer_id])
     customer = Customer.find(params[:customer_id])
     # appointment_time = Time.new(params["year"].to_i,params["month"].to_i, params["day"].to_i, params["hour"], params["min"], 0,'+09:00')
     # タイムゾーンを指定
-    appointment_time = Time.new(params["year"].to_i,params["month"].to_i, params["day"].to_i, params["hour"], params["min"], 0,'+09:00')
-    
+    appointment_time = Time.new(params["year"].to_i,params["month"].to_i, params["day"].to_i, params["hour"], params["min"], 0,'+09:00')  
     # 現在予約できるか確認
     t = [appointment_time, appointment_time + @training_time*60]
-    
     # 予約可能数がなければリターン
-    available = check_available_seat(t, store, trainers, fitness, customer)
+    # available = check_available_seat(t, store, trainers, fitness, customer)
+    available = check_available_seat(t, store, fitness, customer)
     # 予約可能上限数
     customer_apos_max_num = customer.customer_status.numbers_of_contractnt
     this_month_start = DateTime.new(params["year"].to_i,params["month"].to_i, 1, 0, 0, 0, 0.375)
@@ -167,7 +182,6 @@ class AppointmentsController < ApplicationController
     # 今月の総予約数
     apos_count = Appointment.where("? <= appointment_time AND appointment_time <= ? ", this_month_start, this_month_end)
                             .where(customer_id: customer.id).count
-
     if(customer_apos_max_num < apos_count)
       message = "今月の予約上限を超えています。"
     end
@@ -208,6 +222,41 @@ class AppointmentsController < ApplicationController
         :message => message
       }
     end
+  end
+
+  def room_plus
+    comapny_id = params[:id]
+    # tmo = Time.now + 60*60*24
+    t = Time.now 
+    today = admin_make_time_schedule(t.year, t.month, t.day)
+    tmo = Time.now + 60*60*24
+    tomorrow = admin_make_time_schedule(tmo.year, tmo.month, tmo.day)
+    stores = Store.where(company_id: comapny_id)
+    response = []
+    
+    stores.each do |s|
+      availables = []
+      today.each do |t|
+        available = check_only_vacancy(t, s)
+        availables.append(available)
+      end
+      response.append({month: today[0][0].month, day: today[0][0].day, store_name: s, data: availables})
+    end
+
+    stores.each do |s|
+      availables = []
+      tomorrow.each do |at|
+        available = check_only_vacancy(at, s)
+        availables.append(available)
+      end
+      # response.append({store_name: s, data: availables, day: times_tommorow[0][0]})
+      response.append({month: tomorrow[0][0].month, day: tomorrow[0][0].day, store_name: s, data: availables})
+    end
+    render :json => {
+      :error => false,
+      :message => "roomプラスのご予約はLINEにて承ります",
+      :data => response
+    }
   end
 
   # DELETE /appointments/1

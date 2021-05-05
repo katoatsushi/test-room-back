@@ -49,7 +49,8 @@ Rails.application.routes.draw do
   put '/admin/store/deactivate/:id', to: 'stores#deactivate', as: 'store_deactivate'
   # トレーナーの自信が提出した希望シフト
   get '/trainer/shifts/my_requested_shift/year/:year/month/:month', to: 'trainer_management#my_requested_shift', as: 'my_requested_shift'
-  
+  # room プラスの空き状況を送信
+  get '/room_plus/comapny/:id', to: 'appointments#room_plus', as: 'appointments_room_plus'
   resources :customer_weights
   # ログイン・パスワード
   namespace :v1 do
