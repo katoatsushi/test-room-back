@@ -75,9 +75,6 @@ class HomeController < ApplicationController
                           .joins(:trial_session).select("*").to_a
         
         black_schedules.each do |black|
-          if(black.trial_session)
-            # binding.pry
-          end
           
           pre = false
           if(time_counter!=0)
@@ -119,7 +116,6 @@ class HomeController < ApplicationController
         all_array.append(ary)
       end # @this_days_times.each do |t|
       info = {name: s.store_name, data: all_array}
-      # binding.pry
       @scedules << info
     end # Store.where
     render json: {schedules: @scedules, stores: @stores }

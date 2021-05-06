@@ -1,6 +1,5 @@
 class CustomerController < ApplicationController
     def return_customers
-        # binding.pry
     end
 
     def update_interests
