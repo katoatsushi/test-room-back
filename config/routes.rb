@@ -5,6 +5,12 @@ Rails.application.routes.draw do
   resources :evaluations
   resources :customer_record_session_menus
   resources :customer_records
+
+  get '/auth/check/customer', to: 'auth_check#customer', as: 'auth_check_customer'
+  get '/auth/check/trainer', to: 'auth_check#trainer', as: 'auth_check_trainer'
+  get '/auth/check/admin', to: 'auth_check#admin', as: 'auth_check_admin'
+  get '/auth/check/master_admin', to: 'auth_check#master_admin', as: 'auth_check_master_admin'
+
   # # トレーナーのシフト作成
   # post '/trainer/shift/create/year/:year/month/:month', to: 'trainer_shifts#create', as: 'trainer_shifts_create'
   # トレーナーのシフト更新
@@ -51,6 +57,9 @@ Rails.application.routes.draw do
   get '/trainer/shifts/my_requested_shift/year/:year/month/:month', to: 'trainer_management#my_requested_shift', as: 'my_requested_shift'
   # room プラスの空き状況を送信
   get '/room_plus/comapny/:id', to: 'appointments#room_plus', as: 'appointments_room_plus'
+  
+  # お客様登録時のURL作成用
+  get '/check_company_id_by_admin', to: 'admin_management#company_id', as: 'admin_management_company_id'
   resources :customer_weights
   # ログイン・パスワード
   namespace :v1 do

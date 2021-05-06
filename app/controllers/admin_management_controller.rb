@@ -1,5 +1,5 @@
 class AdminManagementController < ApplicationController
-    before_action :authenticate_v1_admin!, only: [:all_customer,:all_trainer]
+    before_action :authenticate_v1_admin!, only: [:all_customer,:all_trainer, :company_id]
   
     require 'date'
 
@@ -141,6 +141,15 @@ class AdminManagementController < ApplicationController
         render json: {
             count: {all: each_menues_score_count,fitness_trainer: fitness_trainer_count, fitness: fitness_count, trainer: trainer_count},
             average: {all: each_menues_score_ava, fitness_trainer: fitness_trainer_ava, fitness: fitness_ava, trainer: trainer_ava},
+            status: 200
+        }
+    end
+
+    def company_id
+    
+        company = Company.find(current_v1_admin.company_id)
+        render json: {
+            company: company,
             status: 200
         }
     end
