@@ -39,7 +39,7 @@ class TrainerShiftsController < ApplicationController
                     finish = DateTime.new(year, month, shift["date"], shift["shift"]["end"][0], shift["shift"]["end"][1], 0, 0.375)
                     this_day_start = DateTime.new(year, month, shift["date"], 0, 0, 0, 0.375)
                     this_day_finish = DateTime.new(year, month, shift["date"], 23, 59, 0, 0.375)
-                    if (TrainerShift.where("? <= start AND finish <= ?", this_day_start, this_day_finish).length == 0)
+                    if (TrainerShift.where(trainer_id: current_v1_trainer.id).where("? <= start AND finish <= ?", this_day_start, this_day_finish).length == 0)
                         TrainerShift.create(start: start, finish: finish, trainer_id: current_v1_trainer.id)
                     end
                 end # new_shift
