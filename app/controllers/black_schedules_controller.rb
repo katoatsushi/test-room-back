@@ -62,11 +62,8 @@ class BlackSchedulesController < ApplicationController
     end
 
     def black_schedule_params
-      #params.fetch(:black_schedule, {})
       params.require(:black_schedule)
       .permit(
-        # :not_free_time_start,
-        # :not_free_time_finish,
         :customer_service,
         :store_id,
         :admin_id

@@ -152,9 +152,6 @@ class AdminManagementController < ApplicationController
         }
     end
 
-
-    def search_customer
-    end
     def all_trainer
         company_id = current_v1_admin.company_id
         trainers = Trainer.where(company_id: company_id)

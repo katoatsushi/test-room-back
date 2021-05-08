@@ -43,7 +43,6 @@ class CalendarController < ApplicationController
       end
       @stores = Store.where(company_id: company_id,deactivate: false)
       @fitness = Fitness.where(company_id: company_id)
-      # response = {store: @stores, fitness: @fitness, year: Date.today.year, month: Date.today.month}
       render :json => {
         :store => @stores, 
         :fitnesses => @fitness,

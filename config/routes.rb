@@ -35,7 +35,6 @@ Rails.application.routes.draw do
   # トレーナーの自身の評価
   get '/trainer/get/my_evaluation/:id',to: 'trainer_management#my_evaluation', as: 'trainer_my_evaluation'
   
-  get '/serch/customers',to: 'admin_management#search_customer', as: 'search_customer'
   #  トレーナーのシフトを送る
   get '/get_trainer_shifts',to: 'admin_management#get_trainer_shifts', as: 'get_trainer_shifts'
   # トレーナーのシフトを更新する
