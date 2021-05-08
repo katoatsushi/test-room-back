@@ -1,6 +1,5 @@
 class AdminManagementController < ApplicationController
-    before_action :authenticate_v1_admin!, only: [:all_customer,:all_trainer, :company_id]
-  
+    before_action :authenticate_v1_admin!, only: [:all_customer,:all_trainer, :company_id]  
     require 'date'
 
     def set_customer_status
@@ -68,7 +67,6 @@ class AdminManagementController < ApplicationController
 
     def update_trainer_shift
         datas = params["data"]
-        
         datas.each do |d|
             if d["shifts"]["id"]
                 # 変更の場合

@@ -11,11 +11,9 @@ class AppointmentsController < ApplicationController
       times.each do |t|
         apos = Appointment.where(store_id: s.id).where("appointment_time >= ? AND appointment_time < ?", t[0], t[1])
         admin_schedules = BlackSchedule.where(store_id: s.id).where("not_free_time_start< ? AND ? <= not_free_time_finish", t[0]+@training_time*60, t[1]-@training_time*60)
-        # vacancy_count = s.number_of_rooms - apos.length - admin_schedules.length
 
         shifts_num = Trainer.joins(:trainer_shifts).select("*").where("start <= ? AND ? <= finish", t[0], t[1]).where(trainer_shifts: {store_id:  s.id}).where(company_id: 1).length
         vacancy_count = shifts_num - apos.length - admin_schedules.length
-        # TrainerShift.joins(:trainers).select("*")
         t[0].min == 0? min_start = "00" : min_start = t[0].min.to_s
         t[1].min == 0? min_fin = "00" : min_fin = t[1].min.to_s
         schedule << {times: [[t[0].hour.to_s, min_start], [t[0].hour.to_s, min_fin]],vacancy_count: vacancy_count}
@@ -44,6 +42,7 @@ class AppointmentsController < ApplicationController
   #   end
   #   予約可能数 = 対応可能トレーナー数
   # end
+
   def check_only_vacancy(t, store)
     # 部屋数
     store_num = store.number_of_rooms
@@ -165,15 +164,12 @@ class AppointmentsController < ApplicationController
     @appointment = Appointment.new(appointment_params)
     store = Store.find(params[:store_id].to_i)
     fitness = Fitness.find(params[:fitness_id].to_i)
-    # trainers = Trainer.where(company_id: params[:customer_id])
     customer = Customer.find(params[:customer_id])
-    # appointment_time = Time.new(params["year"].to_i,params["month"].to_i, params["day"].to_i, params["hour"], params["min"], 0,'+09:00')
     # タイムゾーンを指定
     appointment_time = Time.new(params["year"].to_i,params["month"].to_i, params["day"].to_i, params["hour"], params["min"], 0,'+09:00')  
     # 現在予約できるか確認
     t = [appointment_time, appointment_time + @training_time*60]
     # 予約可能数がなければリターン
-    # available = check_available_seat(t, store, trainers, fitness, customer)
     available = check_available_seat(t, store, fitness, customer)
     # 予約可能上限数
     customer_apos_max_num = customer.customer_status.numbers_of_contractnt
@@ -226,7 +222,6 @@ class AppointmentsController < ApplicationController
 
   def room_plus
     comapny_id = params[:id]
-    # tmo = Time.now + 60*60*24
     t = Time.now 
     today = admin_make_time_schedule(t.year, t.month, t.day)
     tmo = Time.now + 60*60*24
@@ -249,7 +244,6 @@ class AppointmentsController < ApplicationController
         available = check_only_vacancy(at, s)
         availables.append(available)
       end
-      # response.append({store_name: s, data: availables, day: times_tommorow[0][0]})
       response.append({month: tomorrow[0][0].month, day: tomorrow[0][0].day, store_name: s, data: availables})
     end
     render :json => {
@@ -289,54 +283,3 @@ class AppointmentsController < ApplicationController
         )
     end
 end
-
-# s = DateTime.new(2021, 5,7,0,0,0,0.375)
-# f = DateTime.new(2021, 5,7,0,0,0,0.375)
-
-
-# def check_available_seat(t, store, trainers, params_fitness, customer)
-#   # 部屋数
-#   store_num = store.number_of_rooms
-#   # シフト数
-#   this_store_trainer_shifts = TrainerShift.where(store_id: store.id).where("start < ? AND ? < finish", t[0],  t[1]).all
-#   # 管理者のスケジュール
-#   admins_reserved = BlackSchedule.where(store_id: store.id).merge((BlackSchedule.where("? < not_free_time_start AND not_free_time_start < ?", t[0], t[1]).or(BlackSchedule.where("? < not_free_time_finish AND not_free_time_finish < ?", t[0], t[1]))).or(BlackSchedule.where("not_free_time_start <= ? AND ? <= not_free_time_finish ", t[0], t[1])))
-#   # 全てのお客様の予約
-#   reserved = Appointment.where(store_id: store.id).where(appointment_time: t[0])
-#   #　おんなじ時間に予約できないようにする
-#   this_customer_apo = Appointment.where(customer_id: customer.id).where(appointment_time: t[0])
-#   if(this_customer_apo.length!=0)
-#     return 0
-#   ends
-#   available_menues = []
-#   full_time = []
-#   part_time_jobs = []
-#   this_store_trainer_shifts.each do |shift|
-#     # セッションメニューを配列で持つ
-#     available_menues.append(shift.trainer.fitnesses)
-#   end
-#   # シフトを扱えるメニュー数ごとにソート
-#   available_menues_array = available_menues.sort_by { |x| x[0].length }
-
-#   reserved.each do |r|
-#     roop_counter = 0
-#     available_menues_array.each do |menues|
-#       if menues.ids.include?(r.fitness_id)
-#         available_menues_array.delete_at(roop_counter)
-#         break
-#       end
-#       roop_counter = roop_counter + 1
-#     end
-#   end
-
-#   # 希望メニューに対する、現在稼働可能なトレーナーの人数
-#   reservation_available = 0
-#   available_menues_array.each do |menues|
-#     if menues.ids.include?(params_fitness.id)
-#       reservation_available = reservation_available + 1
-#     end
-#   end
-#   # 空いている部屋数と可能なトレーナー数の少ない方が予約可能数
-#   reservation_available = [store_num - admins_reserved.count - reserved.count, reservation_available].min
-#   return reservation_available
-# end
