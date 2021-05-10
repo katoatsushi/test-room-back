@@ -68,12 +68,15 @@ class HomeController < ApplicationController
         datetime_fin = t[1].to_datetime
         ary[0] = [datetime_start,datetime_fin]
 
-        black_schedules = BlackSchedule.where('? <= not_free_time_start', datetime_start).where('not_free_time_start < ?', datetime_fin)
-                          .or(BlackSchedule.where('? < not_free_time_finish', datetime_start).where('not_free_time_finish <= ?', datetime_fin))
-                          .or(BlackSchedule.where('not_free_time_start <= ?', datetime_start).where('? <= not_free_time_finish', datetime_fin))
-                          .where(company_id: params[:company_id], store_id: s.id)
-                          .joins(:trial_session).select("*").to_a
-        
+        # シフト開始時間 < start かつ finish < シフト終了時間
+        black_schedules_middle = BlackSchedule.where(company_id: params[:company_id], store_id: s.id).where('not_free_time_start <= ?', datetime_start).where('not_free_time_finish >= ?', datetime_fin).eager_load(:trial_session).select("*").to_a
+        # start < シフト開始時間 かつ finish < 　シフト終了時間
+        black_schedules_upper = BlackSchedule.where(company_id: params[:company_id], store_id: s.id).where('not_free_time_start > ?', datetime_start).where('not_free_time_start < ?', datetime_fin).where('not_free_time_finish > ?', datetime_fin).eager_load(:trial_session).select("*").to_a
+        # シフト開始時間 < start かつ シフト終了時間 < finish
+        black_schedules_down = BlackSchedule.where(company_id: params[:company_id], store_id: s.id).where('not_free_time_start < ?', datetime_start).where('not_free_time_finish > ?', datetime_start).where('not_free_time_finish < ?', datetime_fin).eager_load(:trial_session).select("*").to_a
+
+        black_schedules = black_schedules_middle + black_schedules_upper + black_schedules_down
+
         black_schedules.each do |black|
           
           pre = false
@@ -147,27 +150,13 @@ class HomeController < ApplicationController
         datetime_start = t[0].to_datetime
         datetime_fin = t[1].to_datetime
         
-        # black_schedules = BlackSchedule.where(company_id: params[:company_id], store_id: s.id)
-        #                   .where(not_free_time_start: datetime_start..datetime_fin)
-        #                   .where('? <= not_free_time_start', datetime_start).where('not_free_time_finish < ?', datetime_fin)
-        #                   .or(BlackSchedule.where(not_free_time_finish: datetime_start..datetime_fin))
-        #                   .or(BlackSchedule.where('not_free_time_start <= ?', datetime_start).where('? <= not_free_time_finish', datetime_fin))
-        #                   .eager_load(:trial_session).select("*").to_a
 
-        black_schedules = BlackSchedule.where(company_id: params[:company_id], store_id: s.id)
-                          .where('? <= not_free_time_start', datetime_start).where('not_free_time_start < ?', datetime_fin)
-                          .or(BlackSchedule.where('? < not_free_time_finish', datetime_start).where('not_free_time_finish <= ?', datetime_fin))
-                          .or(BlackSchedule.where('not_free_time_start <= ?', datetime_start).where('? <= not_free_time_finish', datetime_fin))
+        black_schedules = BlackSchedule.where(company_id: params[:company_id], store_id: s.id).where('? <= not_free_time_start', datetime_start).where('not_free_time_start < ?', datetime_fin)
+                          .or(BlackSchedule.where(company_id: params[:company_id], store_id: s.id).where('? < not_free_time_finish', datetime_start).where('not_free_time_finish <= ?', datetime_fin))
+                          .or(BlackSchedule.where(company_id: params[:company_id], store_id: s.id).where('not_free_time_start <= ?', datetime_start).where('? <= not_free_time_finish', datetime_fin))
                           .eager_load(:trial_session).select("*").to_a
 
-        # customer_appointments = Customer.where(company_id: params[:company_id]).joins(:appointments).joins(:customer_info)
-        #                         .select("customers.*, appointments.*, customer_infos.*")
-        #                         .where(appointments: { appointment_time: t[0], store_id: s.id }).to_a
-
-        customer_appointments = Customer.joins(:appointments).select("*").where(customers: {company_id: params[:company_id]})
-                                .where(appointments: { appointment_time: t[0], store_id: s.id }).to_a
-                                # .where(appointments: {store_id: s.id})
-                                # .where("appointments.appointment_time == ?",today).to_a
+        customer_appointments = Customer.joins(:appointments).select("*").where(customers: {company_id: params[:company_id]}).where(appointments: { appointment_time: t[0], store_id: s.id }).to_a
         schedule_infos = black_schedules.append(customer_appointments).flatten
         schedules_array << [time, schedule_infos]
       end

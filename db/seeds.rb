@@ -76,7 +76,8 @@ trainer_datas = [
     ["松本","健太郎","まつもと","けんたろう","matsukennoacount@gmail.com",["トレーニング"]],
     ["大高","悠偉","おおたか","ゆうい","karaty1126@gmail.com",["トレーニング","ボクササイズ"]],
     ["村田","修平","むらた","しゅうへい","fu1pn64@gmail.com",["トレーニング"]],
-    ["繁田","龍之介","はんだ","りゅうのすけ","tokoswimmer@i.softbank.jp",["トレーニング"]]
+    ["繁田","龍之介","はんだ","りゅうのすけ","tokoswimmer@i.softbank.jp",["トレーニング"]],
+    ["伊藤","恒紀","いとう","こうき","kijyokusoria1962@ezweb.ne.jp",["トレーニング","ストレッチ"]]
 ]
 
 trainer_datas.each do |t|
