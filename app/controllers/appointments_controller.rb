@@ -156,8 +156,12 @@ class AppointmentsController < ApplicationController
       finish_time = [t[1].hour.to_s, finish_min]
       response << [t, available_num, [start_time , finish_time]]
     end
-
-    render json: response
+    render :json => {
+      :store => store,
+      :fitness => fitness,
+      :data => response
+    }
+    # render json: response
   end
 
   def create
