@@ -39,6 +39,11 @@ class AdminManagementController < ApplicationController
             date_array.each do |date|
                 s = DateTime.new(year, month, date, 0, 0,0, 0.375)
                 f = DateTime.new(year, month, date, -1, -1,0, 0.375)
+                # week_day = s.wday
+                # weekend = false
+                # if(week_day==0 || week_day==6)
+                #     weekend = true
+                # end
                 shifts = trainer.trainer_shifts.where("? <= start AND finish <= ?", s, f)
                 if  shifts.length != 0
                     shifts = shifts[0]
@@ -48,11 +53,13 @@ class AdminManagementController < ApplicationController
                         shifts["store"] = Store.find(shifts["store_id"])
                     end
 
+                    # submit_data << {trainer_id: trainer.id, day: date, day_ja:  %w(日 月 火 水 木 金 土)[s.wday], shifts: shifts, weekend: weekend}
                     submit_data << {trainer_id: trainer.id, day: date, day_ja:  %w(日 月 火 水 木 金 土)[s.wday], shifts: shifts}
                 else
                     shifts = nil
                 end
-                shifts_data << {trainer: trainer, trainer_id: trainer.id, month: month, year: year, day: date, day_ja:  %w(日 月 火 水 木 金 土)[s.wday], shifts: shifts}
+                # shifts_data << {trainer: trainer, trainer_id: trainer.id, month: month, year: year, day: date, day_ja:  %w(日 月 火 水 木 金 土)[s.wday], shifts: shifts, weekend: weekend}
+                shifts_data << {trainer: trainer, trainer_id: trainer.id, month: month, year: year, day: date, day_ja:  %w(日 月 火 水 木 金 土)[s.wday], shifts: shifts }
             end
             data << {trainer: trainer, data: shifts_data}
         end
